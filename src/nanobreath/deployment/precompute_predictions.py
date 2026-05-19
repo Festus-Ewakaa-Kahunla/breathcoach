@@ -85,6 +85,80 @@ def load_breath_head(ckpt_path: Path) -> tuple[BreathHead, int]:
     return head, hidden
 
 
+def peak_events(probs: np.ndarray,
+                min_prominence: float = 0.12,
+                min_distance_sec: float = 1.0,
+                rel_height: float = 0.6,
+                smooth_ms: float = 80.0,
+                hop_sec: float = HOP_SEC) -> list[dict]:
+    """Peak-detection event extraction.
+
+    This is the right algorithm when the model is under-confident (e.g. max
+    breath probability ~0.35 on a clip that clearly has breaths). Threshold
+    sweeping gives long blurry events because the prob curve sits near the
+    threshold for most of the clip; peaks pull out the *locations* the model
+    is actually firing at.
+
+    Algorithm:
+      1. Smooth the probability curve (~80 ms moving avg) to remove jitter.
+      2. Find local maxima with at least `min_prominence` height-above-baseline
+         and at least `min_distance_sec` apart.
+      3. For each peak, walk outward to where prob drops below `rel_height` of
+         the peak's height (above the curve's median). That's the event width.
+
+    Returns events sorted by start time.
+    """
+    if len(probs) == 0:
+        return []
+
+    # Smooth
+    w = max(1, int(round(smooth_ms / 1000.0 / hop_sec)))
+    if w > 1:
+        kernel = np.ones(w, dtype=np.float32) / w
+        smooth = np.convolve(probs, kernel, mode="same")
+    else:
+        smooth = probs.copy()
+
+    # Find peaks
+    try:
+        from scipy.signal import find_peaks
+    except ImportError:
+        # Fallback: simple local-max scan (scipy is a hard dep so this rarely fires)
+        peaks = [i for i in range(1, len(smooth) - 1)
+                 if smooth[i] > smooth[i - 1] and smooth[i] > smooth[i + 1]
+                 and smooth[i] > min_prominence]
+        peaks = np.asarray(peaks, dtype=int)
+    else:
+        min_distance_frames = max(1, int(round(min_distance_sec / hop_sec)))
+        peaks, _ = find_peaks(
+            smooth,
+            prominence=min_prominence,
+            distance=min_distance_frames,
+        )
+
+    out = []
+    baseline = float(np.median(smooth))
+    for p in peaks:
+        peak_val = float(smooth[p])
+        cutoff = baseline + (peak_val - baseline) * rel_height
+
+        # Walk left
+        l = p
+        while l > 0 and smooth[l - 1] >= cutoff:
+            l -= 1
+        # Walk right
+        r = p
+        while r < len(smooth) - 1 and smooth[r + 1] >= cutoff:
+            r += 1
+
+        out.append({
+            "start_sec": round(l * hop_sec, 3),
+            "end_sec":   round((r + 1) * hop_sec, 3),  # +1 for half-open interval
+            "score":     round(peak_val, 3),
+        })
+    return out
+
+
 def threshold_events(probs: np.ndarray, threshold: float,
                      min_dur_sec: float = 0.05,
                      merge_gap_sec: float = 0.20,
@@ -190,9 +264,12 @@ def render_spectrogram_png(mel: np.ndarray, output_path: Path,
 
 
 def process_one(audio_path: Path, output_dir: Path,
-                nanopitch: NanoPitch, head: BreathHead, hidden: int,
+                nanopitch, head: BreathHead, hidden: int,
                 detector: RuinskiyDetector,
                 threshold: float, phrases_from: str,
+                method: str = "peak",
+                peak_prominence: float = 0.05,
+                peak_min_distance_sec: float = 0.30,
                 verbose: bool = True) -> Path:
     """Process one WAV — writes JSON + PNG + symlinked WAV into output_dir.
 
@@ -239,7 +316,14 @@ def process_one(audio_path: Path, output_dir: Path,
         for e in detector.detect_array(waveform.astype(np.float32), SAMPLE_RATE)
     ]
 
-    predicted_events = threshold_events(breath_prob, threshold)
+    if method == "peak":
+        predicted_events = peak_events(
+            breath_prob,
+            min_prominence=peak_prominence,
+            min_distance_sec=peak_min_distance_sec,
+        )
+    else:
+        predicted_events = threshold_events(breath_prob, threshold)
     phrase_source = predicted_events if phrases_from == "breath_head" else ruinskiy_events
     phrase_events = derive_phrase_events(phrase_source, duration)
 
@@ -286,6 +370,14 @@ def main():
     p.add_argument("--audio-dir", type=Path, help="directory of WAVs to batch-process")
     p.add_argument("--output-dir", type=Path, required=True)
     p.add_argument("--threshold", type=float, default=0.15)
+    p.add_argument("--method", choices=["peak", "threshold"], default="peak",
+                   help="Event extraction: 'peak' (find local maxima — robust to "
+                        "under-confident models) or 'threshold' (cross threshold "
+                        "and merge gaps — works only when model outputs sharp peaks).")
+    p.add_argument("--peak-prominence", type=float, default=0.12,
+                   help="Min prominence for peak detection (relative to local baseline).")
+    p.add_argument("--peak-min-distance-sec", type=float, default=1.0,
+                   help="Min seconds between two peaks (real singing breaths are ~1+s apart).")
     p.add_argument("--phrases-from", choices=["breath_head", "ruinskiy"],
                    default="ruinskiy")
     args = p.parse_args()
@@ -300,16 +392,19 @@ def main():
     print(f"BreathHead: {hidden} hidden, "
           f"{sum(p.numel() for p in head.parameters()):,} params")
 
+    kw = dict(method=args.method,
+              peak_prominence=args.peak_prominence,
+              peak_min_distance_sec=args.peak_min_distance_sec)
     if args.audio:
         process_one(args.audio, args.output_dir, nanopitch, head, hidden,
-                    detector, args.threshold, args.phrases_from)
+                    detector, args.threshold, args.phrases_from, **kw)
     else:
         wavs = sorted(args.audio_dir.glob("*.wav"))
         print(f"Batch: {len(wavs)} WAVs")
         for w in wavs:
             try:
                 process_one(w, args.output_dir, nanopitch, head, hidden,
-                            detector, args.threshold, args.phrases_from)
+                            detector, args.threshold, args.phrases_from, **kw)
             except Exception as exc:
                 print(f"[{w.stem}] ERROR: {exc}")
 

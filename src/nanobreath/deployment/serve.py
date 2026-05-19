@@ -42,7 +42,7 @@ from nanobreath.model.joint import JointModel
 from nanobreath.data.dataset import compute_log_mel, SAMPLE_RATE, HOP_SAMPLES
 from nanobreath.baseline.ruinskiy_lavner import RuinskiyDetector
 from nanobreath.deployment.precompute_predictions import (
-    threshold_events, derive_phrase_events, render_spectrogram_png,
+    threshold_events, peak_events, derive_phrase_events, render_spectrogram_png,
     load_nanopitch, load_breath_head, HOP_SEC,
 )
 
@@ -131,7 +131,11 @@ def process_audio(waveform: np.ndarray, sample_rate: int,
          "score": round(float(e.score), 3)}
         for e in _models["detector"].detect_array(waveform.astype(np.float32), sample_rate)
     ]
-    predicted_events = threshold_events(breath_prob, _models["threshold"])
+    # Use peak detection by default — robust to under-confident model probs
+    if _models.get("method", "peak") == "peak":
+        predicted_events = peak_events(breath_prob)
+    else:
+        predicted_events = threshold_events(breath_prob, _models["threshold"])
     phrase_src = predicted_events if _models["phrases_from"] == "breath_head" else ruinskiy_events
     phrase_events = derive_phrase_events(phrase_src, duration)
 
@@ -231,6 +235,9 @@ def main():
     p.add_argument("--nanopitch", type=Path, required=True)
     p.add_argument("--breath-head", type=Path, required=True)
     p.add_argument("--threshold", type=float, default=0.25)
+    p.add_argument("--method", choices=["peak", "threshold"], default="peak",
+                   help="Event extraction algorithm (default 'peak' is robust to "
+                        "under-confident model outputs).")
     p.add_argument("--phrases-from", choices=["breath_head", "ruinskiy"], default="breath_head")
     args = p.parse_args()
 
@@ -244,6 +251,7 @@ def main():
     _models["head"], _models["hidden"] = load_breath_head(args.breath_head)
     _models["detector"] = RuinskiyDetector()
     _models["threshold"] = args.threshold
+    _models["method"] = args.method
     _models["phrases_from"] = args.phrases_from
     print(f"Models loaded ({sum(p.numel() for p in _models['head'].parameters())} BreathHead params)")
 

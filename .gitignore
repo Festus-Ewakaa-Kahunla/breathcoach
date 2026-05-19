@@ -1,0 +1,81 @@
+# ─── Data and model artifacts ────────────────────────────────────────────────
+# Data: large, often license-restricted. Always gitignored.
+data/
+!data/.gitkeep
+
+# Training run outputs: ignore the large/noisy bits, keep the small final
+# `best.pth` + train.log so others can reproduce/use the trained model without
+# needing a release-asset download.
+runs/**/epoch_*.pth
+runs/**/checkpoints/
+runs/**/tb/
+runs/**/eval.json
+runs/**/onset_sweep*.json
+runs/**/val_onset_sweep*.json
+
+# Hand-labels: kept locally; the dataset itself is reproducible from the WAVs.
+*.breath.json
+
+# External backbone (NanoPitch) checkpoints — proprietary, never commit.
+nanopitch/
+nanopitch_*/
+backbone_checkpoints/
+
+# ─── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+build/
+dist/
+.eggs/
+.installed.cfg
+
+# Virtualenvs
+.venv/
+venv/
+env/
+ENV/
+
+# Test / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.cache/
+
+# Type checkers / linters
+.mypy_cache/
+.ruff_cache/
+.dmypy.json
+
+# ─── Notebooks ───────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*-checkpoint.ipynb
+
+# ─── IDE / OS ────────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Claude Code workspace files (chat history, session config, agent state)
+.claude/
+
+# ─── Local-only working files ────────────────────────────────────────────────
+scratch/
+tmp/
+*.log
+# …but keep the training logs of released runs (negation must come after *.log)
+!runs/*/train.log
+
+# Mic recordings uploaded via the demo's /process endpoint
+src/nanobreath/deployment/web/recordings/
+
+# Word lock files
+~$*

@@ -82,7 +82,22 @@ def load_breath_head(ckpt_path: Path) -> tuple[BreathHead, int]:
     head = BreathHead(in_features=384, hidden=hidden, kernel_size=5)
     head.load_state_dict(ckpt["state_dict"])
     head.eval()
+    # Store calibration on the model object so process_one can find it.
+    head._calibration = ckpt.get("calibration")
     return head, hidden
+
+
+def apply_calibration(probs: np.ndarray, calibration: dict | None) -> np.ndarray:
+    """Apply post-hoc Platt scaling if calibration is present in the checkpoint."""
+    if not calibration:
+        return probs
+    if calibration.get("type") != "platt":
+        return probs
+    a = float(calibration["a"]); b = float(calibration["b"])
+    eps = 1e-6
+    p = np.clip(probs, eps, 1 - eps)
+    z = np.log(p / (1 - p))
+    return 1.0 / (1.0 + np.exp(-(a * z + b)))
 
 
 def peak_events(probs: np.ndarray,
@@ -309,6 +324,8 @@ def process_one(audio_path: Path, output_dir: Path,
     pitch_argmax = pitch.squeeze().numpy().argmax(axis=-1).astype(np.float32)
     pitch_norm = (pitch_argmax / 360.0).tolist()
     breath_prob = breath.squeeze().numpy()
+    # Apply Platt calibration if it's stored in the checkpoint
+    breath_prob = apply_calibration(breath_prob, getattr(head, "_calibration", None))
 
     ruinskiy_events = [
         {"start_sec": round(e.start_sec, 3), "end_sec": round(e.end_sec, 3),

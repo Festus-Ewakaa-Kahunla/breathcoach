@@ -92,6 +92,36 @@ def main():
               f"(P={em.precision:.4f}, R={em.recall:.4f}, "
               f"{em.n_matched}/{em.n_true_events} matched)")
 
+    print(f"\nProbability distribution:")
+    print(f"  range:    [{probs.min():.4f}, {probs.max():.4f}]")
+    print(f"  mean:     {probs.mean():.4f}")
+    print(f"  median:   {float(np.median(probs)):.4f}")
+    print(f"  prob @ true-positive frames:  mean={probs[labels > 0.5].mean():.4f}, "
+          f"max={probs[labels > 0.5].max():.4f}")
+    print(f"  prob @ true-negative frames:  mean={probs[labels < 0.5].mean():.4f}, "
+          f"max={probs[labels < 0.5].max():.4f}")
+    print(f"  separation (pos_mean - neg_mean): {probs[labels > 0.5].mean() - probs[labels < 0.5].mean():.4f}")
+
+    # Reliability / calibration: ECE-style bins
+    print(f"\nCalibration (10 prob bins):")
+    print(f"  {'bin':>11}  {'n_frames':>8}  {'pred_p':>7}  {'actual_p':>9}  {'gap':>6}")
+    n_bins = 10
+    bin_edges = np.linspace(0, 1, n_bins + 1)
+    bin_idx = np.clip(np.digitize(probs, bin_edges) - 1, 0, n_bins - 1)
+    ece_sum = 0.0
+    for i in range(n_bins):
+        mask = bin_idx == i
+        n = int(mask.sum())
+        if n == 0:
+            continue
+        pred = float(probs[mask].mean())
+        actual = float(labels[mask].mean())
+        gap = abs(pred - actual)
+        ece_sum += n * gap
+        print(f"  {bin_edges[i]:.2f}-{bin_edges[i+1]:.2f}  {n:>8d}  {pred:.4f}   {actual:.4f}    {gap:.3f}")
+    ece = ece_sum / len(probs)
+    print(f"\n  Expected Calibration Error (ECE): {ece:.4f}")
+
 
 if __name__ == "__main__":
     main()

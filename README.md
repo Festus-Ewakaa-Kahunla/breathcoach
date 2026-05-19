@@ -5,10 +5,11 @@ Real-time singing breath & phrase coaching in the browser. A small (~15K-paramet
 | | |
 |---|---|
 | **Python package** | [`nanobreath`](src/nanobreath/) |
-| **Browser demo** | precomputed clips + 🎤 live recording  |
+| **Browser demo** | precomputed clips + 🎤 live recording |
 | **Model size** | 15,705 trainable parameters (head only — backbone is frozen) |
 | **Inference latency** | ~0.05 ms / 10 ms audio frame on a laptop CPU (PyTorch) |
-| **Val PR-AUC** | 0.66 on held-out singers, weak-label eval |
+| **Val PR-AUC** | 0.65 on held-out singers, weak-label eval (Ruinskiy pseudo-labels) |
+| **Expected Calibration Error** | 0.022 — outputs are well-calibrated probabilities |
 | **License** | TBD |
 
 ---
@@ -71,7 +72,7 @@ export NANOPITCH_CHECKPOINT=/path/to/nanopitch/best.pth     # frozen backbone we
 # Start the inference server (loads models once, serves /process for live recordings)
 nanobreath-serve --port 8421 \
     --nanopitch  "$NANOPITCH_CHECKPOINT" \
-    --breath-head runs/v4-aug-2026-05-18/best.pth
+    --breath-head runs/v8-bce-2026-05-19/best.pth
 # open http://localhost:8421/
 ```
 
@@ -111,13 +112,21 @@ Training takes ~12 minutes on a single CPU core for 75 clips (32.8 min of audio)
 
 Honest full-clip evaluation on held-out singers (val split, weak labels from the Ruinskiy baseline):
 
-| Model | Params | Augmentation | PR-AUC | Frame F1 | F1 @ 50 ms | F1 @ 100 ms | F1 @ 250 ms |
+| Model | Loss | PR-AUC | Frame F1 | F1 @ 100 ms | Max prob | ECE | Notes |
 |---|---|---|---|---|---|---|---|
-| v2 — no augmentation | 15.7 K | none | 0.655 | 0.610 | 0.270 | 0.432 | 0.534 |
-| **v4 — production** | **15.7 K** | **SpecAugment + Gaussian noise** | **0.659** | **0.625** | **0.339** | **0.474** | **0.551** |
-| v5 — larger model | 28.2 K | none | 0.659 | 0.623 | 0.239 | 0.412 | 0.512 |
+| v2 — no augmentation | focal | 0.655 | 0.610 | 0.432 | 0.36 | — | baseline |
+| v4 — augmentation | focal | 0.659 | 0.625 | 0.474 | 0.35 | **0.072** | best PR-AUC, but **never crosses 0.4** — badly calibrated |
+| v4 + Platt scaling | focal + post-hoc | 0.659 | 0.625 | 0.474 | 0.69 | 0.028 | 2 params fitted on val, no retraining |
+| **v8 — production** | **BCE pos-w=3 + aug** | **0.649** | **0.617** | **0.436** | **0.78** | **0.022** | natively well-calibrated; smaller PR-AUC drop is worth the sharp outputs |
+| v5 — larger model | focal (hidden=16) | 0.659 | 0.623 | 0.412 | 0.40 | — | doubling head size doesn't help |
 
-Augmentation gives the largest gain on event-level metrics (+7 pts on F1@50 ms, +4 pts on F1@100 ms) — exactly the metric that matters for tight onset localization in a live UI. Doubling the head size doesn't help: at this label-noise level, capacity isn't the bottleneck.
+**Two findings worth noting:**
+
+1. **Focal loss gives strong discrimination but bad calibration on this label distribution.** v4 separates breaths from non-breaths well (PR-AUC 0.66) but compresses all outputs into [0, 0.35] — frames the model predicts at 30-40% probability are actually breaths **73%** of the time. Threshold-based event extraction at any reasonable threshold misfires badly.
+
+2. **Plain BCE with mild positive-class weighting recovers good calibration with almost no PR-AUC loss.** v8 reaches ECE 0.022 (3× better than v4) and emits sharp probabilities up to 0.78. We use it as the production model.
+
+A simpler post-hoc fix — Platt scaling fitted on the val logits — also closes most of the calibration gap (v4 ECE 0.07 → 0.03) without retraining. Useful when the original training run is expensive to reproduce.
 
 ---
 
@@ -163,7 +172,8 @@ nanobreath/
 ├── tests/                                    Smoke tests
 ├── data/                                     local-only; gitignored
 └── runs/
-    └── v4-aug-2026-05-18/                    Released checkpoint + train log
+    ├── v4-aug-2026-05-18/                    Focal-loss checkpoint (kept for ablations)
+    └── v8-bce-2026-05-19/                    Production checkpoint (BCE, well-calibrated)
 ```
 
 ---

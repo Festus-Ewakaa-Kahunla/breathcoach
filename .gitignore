@@ -1,7 +1,9 @@
 # ─── Data and model artifacts ────────────────────────────────────────────────
-# Data: large, often license-restricted. Always gitignored.
-data/
-!data/.gitkeep
+# Dataset directory at the REPO ROOT only (large, license-restricted).
+# Anchored with a leading slash so it does NOT match the source package
+# src/nanobreath/data/, which must be committed.
+/data/
+!/data/.gitkeep
 
 # Training run outputs: ignore the large/noisy bits, keep the small final
 # `best.pth` + train.log so others can reproduce/use the trained model without

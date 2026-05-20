@@ -121,7 +121,7 @@
   .timeline-head h3 { font-size: 0.95rem; font-weight: 600; }
   .timeline-head .time { font-family: ui-monospace, Menlo, monospace; font-size: 0.82rem; color: var(--dim); }
   .timeline-head .time .now { color: var(--text); }
-  #timeline_canvas { width: 100%; height: 84px; display: block; border-radius: 8px; }
+  #timeline_canvas { width: 100%; height: 120px; display: block; border-radius: 8px; background: #0c111a; }
   .timeline-legend { display: flex; gap: 1.3rem; margin-top: 0.7rem; font-size: 0.78rem; color: var(--dim); flex-wrap: wrap; }
   .timeline-legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
   .sw { width: 22px; height: 8px; border-radius: 4px; display: inline-block; }
@@ -233,9 +233,9 @@
     </div>
     <canvas id="timeline_canvas"></canvas>
     <div class="timeline-legend">
-      <span><span class="sw" style="background: var(--teal)"></span>Sung phrase</span>
+      <span><span class="sw" style="background: var(--teal)"></span>Your voice (sung)</span>
       <span><span class="sw dot" style="background: var(--accent)"></span>Breath detected</span>
-      <span><span class="sw" style="background: var(--amber)"></span>Short phrase</span>
+      <span><span class="sw" style="background: rgba(108,140,255,0.3)"></span>Breath region</span>
     </div>
   </div>
 
@@ -447,50 +447,57 @@ function drawRing(curPhraseDur, inBreath) {
   }
 }
 
-// ─── Phrase timeline ────────────────────────────────────────────────
+// ─── Main waveform view (real audio + breath markers) ───────────────
 function drawTimeline(t) {
   const ctx = setupCanvas(els.timeline);
   const W = els.timeline.clientWidth, H = els.timeline.clientHeight;
   const dur = predictions.duration_sec;
+  const mid = H / 2;
+  const playX = (t / dur) * W;
   ctx.clearRect(0, 0, W, H);
 
-  const trackY = H/2, barH = 22;
-  // Background track
-  ctx.fillStyle = '#10151f';
-  ctx.fillRect(0, trackY - barH/2, W, barH);
-
-  // Phrase segments
-  for (const ph of predictions.phrase_events) {
-    const x = (ph.start_sec / dur) * W;
-    const w = Math.max(2, (ph.duration_sec / dur) * W);
-    const cls = ph.duration_sec < 2 ? '--amber' : ph.duration_sec >= 12 ? '--accent' : '--teal';
-    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue(cls).trim();
-    roundRect(ctx, x+1, trackY - barH/2, w-2, barH, 5); ctx.fill();
-  }
-
-  // Breath markers (dots between phrases)
   const events = predictions.phrases_from === 'breath_head'
     ? predictions.predicted_events : predictions.ruinskiy_events;
+
+  // Breath regions — faint vertical bands behind the waveform
   for (const ev of events) {
-    const x = ((ev.start_sec + ev.end_sec)/2 / dur) * W;
-    ctx.beginPath(); ctx.arc(x, trackY, 4, 0, Math.PI*2);
-    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-    ctx.fill();
+    const x = (ev.start_sec / dur) * W;
+    const w = Math.max(3, ((ev.end_sec - ev.start_sec) / dur) * W);
+    ctx.fillStyle = 'rgba(108,140,255,0.16)';
+    ctx.fillRect(x, 0, w, H);
+  }
+
+  // Real waveform — peak-per-pixel, mirrored around center.
+  // Played portion is bright teal; upcoming portion is dim grey.
+  if (waveData && waveData.length) {
+    const step = waveData.length / W;
+    for (let x = 0; x < W; x++) {
+      let mx = 0;
+      const s = Math.floor(x * step), e = Math.floor((x + 1) * step);
+      for (let i = s; i < e; i++) { const v = Math.abs(waveData[i]); if (v > mx) mx = v; }
+      const h = Math.max(0.6, mx * (mid - 6));
+      ctx.fillStyle = x <= playX ? 'rgba(52,217,196,0.9)' : 'rgba(94,107,128,0.5)';
+      ctx.fillRect(x, mid - h, 1, h * 2);
+    }
+  } else {
+    ctx.fillStyle = 'var(--faint)';
+    ctx.fillText('decoding audio…', 8, mid);
+  }
+
+  // Breath markers — blue dots along the bottom with a thin guide line
+  for (const ev of events) {
+    const x = ((ev.start_sec + ev.end_sec) / 2 / dur) * W;
+    ctx.strokeStyle = 'rgba(108,140,255,0.35)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    ctx.beginPath(); ctx.arc(x, H - 6, 3.5, 0, Math.PI * 2);
+    ctx.fillStyle = '#6c8cff'; ctx.fill();
     ctx.strokeStyle = '#0b0e14'; ctx.lineWidth = 1.5; ctx.stroke();
   }
 
   // Playhead
-  const px = (t / dur) * W;
-  ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5;
-  ctx.beginPath(); ctx.moveTo(px, 4); ctx.lineTo(px, H-4); ctx.stroke();
-  ctx.beginPath(); ctx.arc(px, 4, 3, 0, Math.PI*2); ctx.fillStyle = '#fff'; ctx.fill();
-}
-
-function roundRect(ctx, x, y, w, h, r) {
-  r = Math.min(r, w/2, h/2);
-  ctx.beginPath();
-  ctx.moveTo(x+r, y); ctx.arcTo(x+w, y, x+w, y+h, r); ctx.arcTo(x+w, y+h, x, y+h, r);
-  ctx.arcTo(x, y+h, x, y, r); ctx.arcTo(x, y, x+w, y, r); ctx.closePath();
+  ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(playX, 0); ctx.lineTo(playX, H); ctx.stroke();
+  ctx.beginPath(); ctx.arc(playX, 5, 3, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
 }
 
 // ─── Analysis panel drawings ────────────────────────────────────────
@@ -656,6 +663,14 @@ els.audio.addEventListener('ended', () => {
   showSummary();
 });
 window.addEventListener('resize', () => { if (predictions) drawAll(els.audio.currentTime); });
+
+// Redraw the analysis canvases whenever the panel is expanded (they have zero
+// width while collapsed, so drawing them only happens once they're visible).
+document.querySelector('details.analysis').addEventListener('toggle', (e) => {
+  if (e.target.open && predictions) requestAnimationFrame(() => drawAll(els.audio.currentTime));
+});
+// Redraw the spectrogram overlay once the image actually loads.
+els.specImg.addEventListener('load', () => { if (predictions) drawSpectrogramOverlay(); });
 
 /* ─── Mic recording → POST /process ─── */
 const REC_MAX_SEC = 15, REC_SR = 16000;

@@ -70,11 +70,13 @@ python3.11 -m venv .venv
 # 2. Provide the NanoPitch backbone (not bundled — see models/README.md).
 #    Drop model.py + best.pth into models/nanopitch/ and it's auto-detected.
 
-# 3. Start the inference server — no flags needed, it finds the local
-#    backbone (models/nanopitch/) and the bundled BreathHead (runs/) by default.
-.venv/bin/python -m nanobreath.deployment.serve
+# 3. Start the demo — no flags, no env vars. It auto-discovers the local
+#    backbone (models/nanopitch/) and the bundled BreathHead (runs/).
+.venv/bin/python run_demo.py
 # open http://localhost:8421/
 ```
+
+`run_demo.py` is a thin launcher that puts `src/` on the import path, so it runs straight from a clone even without the editable install. If the package is installed, `python -m nanobreath.deployment.serve` is equivalent. Both accept `--port`, `--nanopitch`, `--breath-head`, and `--method`.
 
 The demo loads 5 precomputed VocalSet clips and a pink **🎤 Record** button. Click it, sing for up to 15 seconds, and the browser uploads the recording to the local `/process` endpoint, runs the NanoPitch + BreathHead + Ruinskiy pipeline, and renders the result in the same UI.
 

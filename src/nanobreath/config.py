@@ -26,21 +26,29 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR: Path = Path(os.environ.get("NANOBREATH_DATA_DIR", _REPO_ROOT / "data"))
 RUNS_DIR: Path = Path(os.environ.get("NANOBREATH_RUNS_DIR", _REPO_ROOT / "runs"))
 
-# Path to a NanoPitch-compatible backbone checkpoint. No default — must be
-# supplied explicitly by env var or CLI flag because it's environment-specific
-# and not bundled with the repo.
+# Local backbone location. The NanoPitch backbone (a Smule-confidential
+# artifact) is NOT committed to the public repo — it lives under models/nanopitch/
+# locally and is gitignored. Drop a compatible `model.py` (defining a NanoPitch
+# class) and `best.pth` there to run the project standalone, with no env vars.
+_LOCAL_BACKBONE_DIR = _REPO_ROOT / "models" / "nanopitch"
+
+# Path to a NanoPitch-compatible backbone checkpoint.
+# Resolution: env var → local models/nanopitch/best.pth → None.
 NANOPITCH_CHECKPOINT: Path | None = (
     Path(os.environ["NANOPITCH_CHECKPOINT"])
     if "NANOPITCH_CHECKPOINT" in os.environ
-    else None
+    else ((_LOCAL_BACKBONE_DIR / "best.pth")
+          if (_LOCAL_BACKBONE_DIR / "best.pth").exists() else None)
 )
 
 # Path to a NanoPitch source tree (for the `from model import NanoPitch` import
-# in joint.py). If unset, joint.py will raise a helpful error when used.
+# in joint.py).
+# Resolution: env var → local models/nanopitch/ → None.
 NANOPITCH_SRC_DIR: Path | None = (
     Path(os.environ["NANOPITCH_SRC_DIR"])
     if "NANOPITCH_SRC_DIR" in os.environ
-    else None
+    else (_LOCAL_BACKBONE_DIR
+          if (_LOCAL_BACKBONE_DIR / "model.py").exists() else None)
 )
 
 

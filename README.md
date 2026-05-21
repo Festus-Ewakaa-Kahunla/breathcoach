@@ -63,20 +63,22 @@ The phrase tracker is downstream of the model: a simple state machine with hyste
 ## Run the demo
 
 ```bash
-pip install -e .
+# 1. Create an isolated environment and install the package
+python3.11 -m venv .venv
+.venv/bin/pip install -e .
 
-# Tell nanobreath where your NanoPitch source + checkpoint live
-export NANOPITCH_SRC_DIR=/path/to/nanopitch/training        # contains model.py with class NanoPitch
-export NANOPITCH_CHECKPOINT=/path/to/nanopitch/best.pth     # frozen backbone weights
+# 2. Provide the NanoPitch backbone (not bundled — see models/README.md).
+#    Drop model.py + best.pth into models/nanopitch/ and it's auto-detected.
 
-# Start the inference server (loads models once, serves /process for live recordings)
-nanobreath-serve --port 8421 \
-    --nanopitch  "$NANOPITCH_CHECKPOINT" \
-    --breath-head runs/v8-bce-2026-05-19/best.pth
+# 3. Start the inference server — no flags needed, it finds the local
+#    backbone (models/nanopitch/) and the bundled BreathHead (runs/) by default.
+.venv/bin/python -m nanobreath.deployment.serve
 # open http://localhost:8421/
 ```
 
-The demo loads 5 precomputed VocalSet clips and a pink **🎤 Record** button. Click it, sing for up to 15 seconds, and the browser uploads the recording to the local `/process` endpoint, runs the same NanoPitch + BreathHead + Ruinskiy pipeline, and renders the result in the same UI.
+The demo loads 5 precomputed VocalSet clips and a pink **🎤 Record** button. Click it, sing for up to 15 seconds, and the browser uploads the recording to the local `/process` endpoint, runs the NanoPitch + BreathHead + Ruinskiy pipeline, and renders the result in the same UI.
+
+> **Backbone note.** BreathCoach attaches to a frozen NanoPitch pitch-tracking backbone, which is a separate Smule-confidential artifact and is **not** included in this repo. Place a compatible `model.py` + `best.pth` in `models/nanopitch/` (see [`models/README.md`](models/README.md)). Any module with the same interface works — the wrapper in `src/nanobreath/model/joint.py` documents the exact attributes it expects.
 
 ---
 

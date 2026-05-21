@@ -230,16 +230,31 @@ class Handler(SimpleHTTPRequestHandler):
 
 
 def main():
+    from nanobreath import config as cfg
+    default_bh = cfg.RUNS_DIR / "v8-bce-2026-05-19" / "best.pth"
+
     p = argparse.ArgumentParser()
     p.add_argument("--port", type=int, default=8421)
-    p.add_argument("--nanopitch", type=Path, required=True)
-    p.add_argument("--breath-head", type=Path, required=True)
+    p.add_argument("--nanopitch", type=Path, default=cfg.NANOPITCH_CHECKPOINT,
+                   help="NanoPitch backbone checkpoint. Defaults to the local "
+                        "models/nanopitch/best.pth (or $NANOPITCH_CHECKPOINT).")
+    p.add_argument("--breath-head", type=Path,
+                   default=(default_bh if default_bh.exists() else None),
+                   help="Trained BreathHead checkpoint. Defaults to the bundled "
+                        "v8 release checkpoint under runs/.")
     p.add_argument("--threshold", type=float, default=0.25)
     p.add_argument("--method", choices=["peak", "threshold"], default="peak",
                    help="Event extraction algorithm (default 'peak' is robust to "
                         "under-confident model outputs).")
     p.add_argument("--phrases-from", choices=["breath_head", "ruinskiy"], default="breath_head")
     args = p.parse_args()
+
+    if args.nanopitch is None:
+        sys.exit("No NanoPitch backbone found. Place model.py + best.pth in "
+                 "models/nanopitch/, or pass --nanopitch / set $NANOPITCH_CHECKPOINT.")
+    if args.breath_head is None:
+        sys.exit("No BreathHead checkpoint found. Pass --breath-head, or keep "
+                 "runs/v8-bce-2026-05-19/best.pth in the repo.")
 
     web_dir = Path(__file__).parent / "web"
     if not web_dir.exists():

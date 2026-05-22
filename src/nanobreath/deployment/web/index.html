@@ -3,195 +3,183 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BreathCoach — Sing with better breath support</title>
+<title>BreathCoach — sing with better breath support</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:        #0b0e14;
-    --bg2:       #0e131c;
-    --surface:   #151b27;
-    --surface2:  #1c2433;
-    --border:    #25304200;
-    --border-vis:#26303f;
-    --text:      #eef2f8;
-    --dim:       #8995a8;
-    --faint:     #5b6678;
-    --teal:      #34d9c4;
-    --teal-soft: #34d9c433;
-    --accent:    #6c8cff;
-    --green:     #4cda7c;
-    --amber:     #ffc24b;
-    --red:       #ff6b7d;
-    --pink:      #ff6c8c;
+    --bg:      #07070e;
+    --ink:     #f5f5fc;
+    --dim:     #9aa1b8;
+    --faint:   #565d76;
+    --line:    #1c2233;
+    --card:    rgba(20,24,38,0.66);
+    --teal:    #2ee6c8;
+    --indigo:  #6c7bff;
+    --magenta: #ff5ea0;
+    --amber:   #ffc24b;
+    --green:   #44e08a;
+    --red:     #ff5d72;
+    --grad:    linear-gradient(100deg, #2ee6c8 0%, #6c7bff 52%, #ff5ea0 100%);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { -webkit-font-smoothing: antialiased; }
+  html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    background:
-      radial-gradient(1200px 600px at 50% -10%, rgba(52,217,196,0.07), transparent 70%),
-      radial-gradient(900px 500px at 90% 110%, rgba(108,140,255,0.06), transparent 70%),
-      var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    line-height: 1.5;
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    background: var(--bg); color: var(--ink); min-height: 100vh; overflow-x: hidden;
+    position: relative;
   }
-  .wrap { max-width: 960px; margin: 0 auto; padding: 1.5rem 1.25rem 5rem; }
+  /* Drifting aurora background — the "expressive" energy */
+  .aurora { position: fixed; inset: 0; z-index: -2; overflow: hidden; }
+  .aurora b {
+    position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.55;
+    mix-blend-mode: screen;
+  }
+  .aurora .a1 { width: 52vw; height: 52vw; left: -8vw; top: -14vw; background: #16b8a0; animation: drift1 22s ease-in-out infinite; }
+  .aurora .a2 { width: 46vw; height: 46vw; right: -10vw; top: -6vw; background: #4f54d6; animation: drift2 26s ease-in-out infinite; }
+  .aurora .a3 { width: 50vw; height: 50vw; left: 30vw; bottom: -22vw; background: #d6357e; animation: drift3 30s ease-in-out infinite; }
+  @keyframes drift1 { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(8vw,6vw) scale(1.12);} }
+  @keyframes drift2 { 0%,100%{transform:translate(0,0) scale(1.05);} 50%{transform:translate(-6vw,8vw) scale(0.95);} }
+  @keyframes drift3 { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(-7vw,-6vw) scale(1.1);} }
+  .grain { position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background: radial-gradient(circle at 50% 0%, transparent 55%, rgba(7,7,14,0.85) 100%); }
+
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 1.5rem 1.25rem 5rem; position: relative; }
 
   /* ── Header ── */
-  header { text-align: center; padding: 1.5rem 0 1.75rem; }
-  .logo {
-    font-size: 1.7rem; font-weight: 700; letter-spacing: -0.02em;
-    display: inline-flex; align-items: center; gap: 0.5rem;
+  header { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0 2.2rem; flex-wrap: wrap; gap: 1rem; }
+  .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.03em; display: inline-flex; align-items: center; gap: 0.6rem; }
+  .logo .orb {
+    width: 30px; height: 30px; border-radius: 50%; background: var(--grad);
+    box-shadow: 0 0 24px rgba(108,123,255,0.55); animation: orbBreath 4s ease-in-out infinite;
   }
-  .logo .mark {
-    width: 26px; height: 26px; border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, var(--teal), #1d9b8c);
-    box-shadow: 0 0 18px var(--teal-soft);
-  }
-  .logo .breath { color: var(--teal); }
-  .tagline { color: var(--dim); margin-top: 0.4rem; font-size: 0.95rem; }
+  @keyframes orbBreath { 0%,100%{transform:scale(1); box-shadow:0 0 22px rgba(108,123,255,0.45);} 50%{transform:scale(1.14); box-shadow:0 0 34px rgba(255,94,160,0.55);} }
+  .logo .grad-text { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .tagline { color: var(--dim); font-size: 0.95rem; max-width: 320px; text-align: right; }
 
-  /* ── Control bar ── */
-  .controls {
-    display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
-    justify-content: center; margin-bottom: 2rem;
-  }
-  button {
-    font-family: inherit; font-size: 0.92rem; font-weight: 600;
-    border: none; border-radius: 999px; cursor: pointer;
-    padding: 0.6rem 1.4rem; transition: all 0.16s ease;
-  }
-  .btn-primary { background: var(--teal); color: #062b27; min-width: 130px; }
-  .btn-primary:hover { background: #46e6d1; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(52,217,196,0.25); }
-  .btn-ghost { background: var(--surface2); color: var(--text); }
-  .btn-ghost:hover { background: #26314556; background: #283448; }
-  .btn-record { background: transparent; color: var(--pink); border: 1.5px solid var(--pink); }
-  .btn-record:hover { background: rgba(255,108,140,0.1); }
-  .btn-record.recording { background: var(--red); color: #fff; border-color: var(--red); animation: recPulse 1.2s infinite; }
-  @keyframes recPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(255,107,125,0.5);} 50% { box-shadow: 0 0 0 10px rgba(255,107,125,0);} }
-  select {
-    font-family: inherit; font-size: 0.9rem; color: var(--text);
-    background: var(--surface2); border: 1px solid var(--border-vis);
-    border-radius: 999px; padding: 0.55rem 1rem; cursor: pointer;
-  }
-  select:focus { outline: 2px solid var(--teal); outline-offset: -1px; }
+  /* ── Controls ── */
+  .controls { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; justify-content: center; margin-bottom: 2.4rem; }
+  button { font-family: inherit; font-weight: 600; font-size: 0.95rem; border: none; border-radius: 999px; cursor: pointer; transition: transform 0.14s ease, box-shadow 0.2s, background 0.2s, opacity 0.2s; }
+  .btn-primary { padding: 0.78rem 2rem; color: #04130f; background: var(--grad); background-size: 160% 160%; box-shadow: 0 8px 26px rgba(108,123,255,0.32); animation: shimmer 6s ease infinite; }
+  @keyframes shimmer { 0%,100%{background-position:0% 50%;} 50%{background-position:100% 50%;} }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 34px rgba(255,94,160,0.4); }
+  .btn-ghost { padding: 0.78rem 1.4rem; background: rgba(255,255,255,0.06); color: var(--ink); border: 1px solid var(--line); }
+  .btn-ghost:hover { background: rgba(255,255,255,0.11); transform: translateY(-1px); }
+  .btn-record { padding: 0.78rem 1.5rem; background: rgba(255,94,160,0.1); color: var(--magenta); border: 1.5px solid rgba(255,94,160,0.55); }
+  .btn-record:hover { background: rgba(255,94,160,0.18); transform: translateY(-1px); }
+  .btn-record.recording { background: var(--magenta); color: #fff; border-color: var(--magenta); animation: recPulse 1.1s infinite; }
+  @keyframes recPulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,94,160,0.55);} 50%{box-shadow:0 0 0 14px rgba(255,94,160,0);} }
+  select { font-family: inherit; font-weight: 500; font-size: 0.92rem; color: var(--ink); background: rgba(255,255,255,0.06); border: 1px solid var(--line); border-radius: 999px; padding: 0.7rem 1.15rem; cursor: pointer; }
+  select:focus { outline: 2px solid var(--indigo); outline-offset: -1px; }
   #record_state { font-variant-numeric: tabular-nums; font-weight: 700; }
 
-  /* ── The stage (breath ring + side stats) ── */
-  .stage {
-    display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.5rem;
-    align-items: center; margin-bottom: 1.5rem;
-  }
-  .ring-wrap { position: relative; width: 280px; height: 280px; justify-self: center; }
-  #breath_ring { width: 100%; height: 100%; }
-  .ring-center {
-    position: absolute; inset: 0; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; pointer-events: none;
-  }
-  .ring-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--dim); }
-  .ring-time { font-size: 3.4rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; margin: 0.15rem 0; transition: color 0.3s; }
-  .ring-time .u { font-size: 1.2rem; color: var(--dim); font-weight: 600; }
-  .ring-sub { font-size: 0.8rem; color: var(--faint); }
+  /* ── Stage: hero ring + stats ── */
+  .stage { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: center; margin-bottom: 1.6rem; }
+  .ring-wrap { position: relative; width: 360px; height: 360px; justify-self: center; }
+  .ring-glow { position: absolute; inset: 18%; border-radius: 50%; background: var(--grad); filter: blur(46px); opacity: 0.4; z-index: -1; animation: glowBreath 5s ease-in-out infinite; }
+  @keyframes glowBreath { 0%,100%{transform:scale(0.92); opacity:0.32;} 50%{transform:scale(1.08); opacity:0.5;} }
+  #breath_ring { width: 100%; height: 100%; display: block; }
+  .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+  .ring-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.22em; color: var(--dim); }
+  .ring-time { font-size: 5rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 0.95; margin: 0.25rem 0 0.1rem; letter-spacing: -0.03em; transition: color 0.3s; }
+  .ring-time.idle { color: var(--faint); }
+  .ring-time .u { font-size: 1.6rem; color: var(--dim); font-weight: 500; }
+  .ring-sub { font-size: 0.9rem; color: var(--faint); letter-spacing: 0.02em; }
 
   .side-stat { text-align: center; }
-  .side-stat .num { font-size: 2.3rem; font-weight: 700; font-variant-numeric: tabular-nums; transition: color 0.2s; }
-  .side-stat .num.idle { color: var(--faint); }
-  .side-stat .lbl { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); margin-top: 0.1rem; }
-  .side-stat .num.pulse { animation: numPulse 0.6s ease; }
-  @keyframes numPulse { 0%{transform:scale(1);color:var(--teal);} 50%{transform:scale(1.15);color:var(--teal);} 100%{transform:scale(1);} }
+  .side-stat .num { font-size: 3.4rem; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.03em; line-height: 1;
+    background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; transition: opacity 0.2s; }
+  .side-stat .num.idle { background: none; color: var(--faint); }
+  .side-stat .lbl { font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--dim); margin-top: 0.4rem; }
+  .side-stat .num.pulse { animation: numPop 0.6s cubic-bezier(.2,1.4,.4,1); }
+  @keyframes numPop { 0%{transform:scale(1);} 45%{transform:scale(1.22);} 100%{transform:scale(1);} }
 
-  /* ── Coaching message ── */
-  .coach {
-    text-align: center; font-size: 1.1rem; font-weight: 500;
-    padding: 1rem 1.5rem; border-radius: 14px; margin: 0 auto 2rem;
-    max-width: 560px; background: var(--surface); border: 1px solid var(--border-vis);
-    transition: all 0.3s; min-height: 3.4rem; display: flex; align-items: center; justify-content: center;
-  }
-  .coach.good   { border-color: #2c6b46; background: rgba(76,218,124,0.08); color: #b6f0cd; }
-  .coach.warn   { border-color: #7a5c1f; background: rgba(255,194,75,0.08); color: #ffe2a8; }
-  .coach.danger { border-color: #7a2c38; background: rgba(255,107,125,0.08); color: #ffc2cb; }
-  .coach.breath { border-color: #2a5560; background: rgba(52,217,196,0.1); color: #aef0e7; }
+  /* ── Coach banner ── */
+  .coach { text-align: center; font-size: 1.25rem; font-weight: 500; padding: 1.1rem 1.6rem; border-radius: 18px;
+    margin: 0 auto 2.2rem; max-width: 620px; background: var(--card); border: 1px solid var(--line); backdrop-filter: blur(12px);
+    transition: all 0.3s; min-height: 3.7rem; display: flex; align-items: center; justify-content: center; }
+  .coach.good   { border-color: rgba(68,224,138,0.5); color: #b9f5d3; background: rgba(68,224,138,0.08); }
+  .coach.warn   { border-color: rgba(255,194,75,0.5); color: #ffe3a6; background: rgba(255,194,75,0.08); }
+  .coach.danger { border-color: rgba(255,93,114,0.5); color: #ffc4cc; background: rgba(255,93,114,0.08); }
+  .coach.breath { border-color: rgba(46,230,200,0.55); color: #aef3e9; background: rgba(46,230,200,0.1); }
 
-  /* ── Phrase timeline ── */
-  .timeline-card {
-    background: var(--surface); border: 1px solid var(--border-vis);
-    border-radius: 16px; padding: 1.1rem 1.3rem; margin-bottom: 1.25rem;
-  }
-  .timeline-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.7rem; }
-  .timeline-head h3 { font-size: 0.95rem; font-weight: 600; }
-  .timeline-head .time { font-family: ui-monospace, Menlo, monospace; font-size: 0.82rem; color: var(--dim); }
-  .timeline-head .time .now { color: var(--text); }
-  #timeline_canvas { width: 100%; height: 120px; display: block; border-radius: 8px; background: #0c111a; }
-  .timeline-legend { display: flex; gap: 1.3rem; margin-top: 0.7rem; font-size: 0.78rem; color: var(--dim); flex-wrap: wrap; }
-  .timeline-legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+  /* ── Cards ── */
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 1.3rem 1.4rem; margin-bottom: 1.25rem; backdrop-filter: blur(12px); }
+  .card-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.9rem; }
+  .card-head h3 { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.01em; }
+  .card-head .time { font-family: ui-monospace, Menlo, monospace; font-size: 0.84rem; color: var(--dim); }
+  .card-head .time .now { color: var(--teal); }
+  #timeline_canvas { width: 100%; height: 140px; display: block; border-radius: 12px; }
+  .legend { display: flex; gap: 1.4rem; margin-top: 0.85rem; font-size: 0.8rem; color: var(--dim); flex-wrap: wrap; }
+  .legend span { display: inline-flex; align-items: center; gap: 0.45rem; }
   .sw { width: 22px; height: 8px; border-radius: 4px; display: inline-block; }
-  .sw.dot { width: 8px; height: 8px; border-radius: 50%; }
+  .sw.dot { width: 9px; height: 9px; border-radius: 50%; }
 
-  /* ── Session summary ── */
+  /* ── Summary ── */
   #summary { display: none; }
-  #summary.visible { display: block; animation: fade 0.45s ease; }
-  @keyframes fade { from { opacity:0; transform: translateY(10px);} to {opacity:1;transform:none;} }
-  .summary-card { background: var(--surface); border: 1px solid var(--border-vis); border-radius: 16px; padding: 1.3rem; margin-bottom: 1.25rem; }
-  .summary-card h3 { font-size: 1rem; margin-bottom: 1rem; }
-  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; text-align: center; margin-bottom: 1.2rem; }
-  .stat-row .v { font-size: 1.7rem; font-weight: 700; }
-  .stat-row .v .u { font-size: 0.85rem; color: var(--dim); }
-  .stat-row .l { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--dim); margin-top: 0.15rem; }
-  .phrase-row { display: grid; grid-template-columns: 42px 1fr 70px; align-items: center; gap: 0.6rem; padding: 0.35rem 0; font-size: 0.88rem; }
+  #summary.visible { display: block; animation: rise 0.5s cubic-bezier(.2,.8,.2,1); }
+  @keyframes rise { from { opacity:0; transform: translateY(14px);} to {opacity:1;transform:none;} }
+  .stat-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; text-align: center; margin-bottom: 1.3rem; }
+  .stat-row .v { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat-row .v .u { font-size: 0.9rem; -webkit-text-fill-color: var(--dim); }
+  .stat-row .l { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); margin-top: 0.25rem; }
+  .phrase-row { display: grid; grid-template-columns: 46px 1fr 74px; align-items: center; gap: 0.7rem; padding: 0.4rem 0; font-size: 0.9rem; }
   .phrase-row .n { color: var(--faint); font-variant-numeric: tabular-nums; }
-  .phrase-row .bar { height: 9px; border-radius: 5px; background: var(--green); transition: width 0.3s; }
-  .phrase-row .bar.short { background: var(--amber); }
-  .phrase-row .bar.long { background: var(--teal); }
+  .phrase-row .bar { height: 11px; border-radius: 6px; background: linear-gradient(90deg,#2ee6c8,#6c7bff); transition: width 0.4s cubic-bezier(.2,.8,.2,1); }
+  .phrase-row .bar.short { background: linear-gradient(90deg,#ffc24b,#ff8d5e); }
+  .phrase-row .bar.long  { background: linear-gradient(90deg,#6c7bff,#ff5ea0); }
   .phrase-row .d { text-align: right; font-variant-numeric: tabular-nums; color: var(--dim); }
-  .vs-line { margin-top: 1rem; padding-top: 0.9rem; border-top: 1px solid var(--border-vis); font-size: 0.85rem; color: var(--dim); }
+  .vs-line { margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid var(--line); font-size: 0.9rem; color: var(--dim); }
 
-  /* ── Analysis (collapsible) ── */
-  details.analysis { background: var(--surface); border: 1px solid var(--border-vis); border-radius: 16px; margin-bottom: 1.25rem; overflow: hidden; }
-  details.analysis > summary {
-    cursor: pointer; padding: 1rem 1.3rem; font-weight: 600; font-size: 0.95rem;
-    list-style: none; display: flex; align-items: center; justify-content: space-between; user-select: none;
-  }
+  /* ── Analysis ── */
+  details.analysis { background: var(--card); border: 1px solid var(--line); border-radius: 20px; margin-bottom: 1.25rem; overflow: hidden; backdrop-filter: blur(12px); }
+  details.analysis > summary { cursor: pointer; padding: 1.1rem 1.4rem; font-weight: 600; font-size: 1rem; list-style: none; display: flex; align-items: center; justify-content: space-between; user-select: none; }
   details.analysis > summary::-webkit-details-marker { display: none; }
   details.analysis > summary::after { content: '▾'; color: var(--dim); transition: transform 0.2s; }
   details.analysis[open] > summary::after { transform: rotate(180deg); }
-  .analysis-body { padding: 0 1.3rem 1.3rem; }
-  .analysis-sub { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--dim); margin: 1rem 0 0.5rem; display: flex; justify-content: space-between; }
-  #spec_wrap { position: relative; height: 170px; overflow: hidden; border-radius: 8px; background: #0a0a0f; }
+  .analysis-body { padding: 0 1.4rem 1.4rem; }
+  .analysis-sub { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); margin: 1.1rem 0 0.5rem; display: flex; justify-content: space-between; }
+  #spec_wrap { position: relative; height: 180px; overflow: hidden; border-radius: 12px; background: #0a0a12; }
   #spec_img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; display: block; }
   #spec_overlay { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; background: transparent !important; }
-  #wave_canvas { width: 100%; height: 80px; display: block; background: #0a0a0f; border-radius: 8px; }
-  #prob_canvas { width: 100%; height: 100px; display: block; background: #0a0a0f; border-radius: 8px; }
-  .analysis-legend { display: flex; gap: 1rem; font-size: 0.76rem; color: var(--dim); margin-top: 0.5rem; flex-wrap: wrap; }
+  #wave_canvas { width: 100%; height: 84px; display: block; background: #0a0a12; border-radius: 12px; }
+  #prob_canvas { width: 100%; height: 104px; display: block; background: #0a0a12; border-radius: 12px; }
+  .analysis-legend { display: flex; gap: 1rem; font-size: 0.78rem; color: var(--dim); margin-top: 0.5rem; flex-wrap: wrap; }
   .analysis-legend span { display: inline-flex; align-items: center; gap: 0.35rem; }
-  .model-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.8rem; margin-top: 1rem; }
-  .model-grid .cell { background: var(--bg2); border: 1px solid var(--border-vis); border-radius: 10px; padding: 0.7rem 0.9rem; }
-  .model-grid .cell .v { font-family: ui-monospace, Menlo, monospace; font-weight: 600; font-size: 0.95rem; }
-  .model-grid .cell .l { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--dim); margin-top: 0.2rem; }
+  .model-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px,1fr)); gap: 0.8rem; margin-top: 1rem; }
+  .model-grid .cell { background: rgba(255,255,255,0.03); border: 1px solid var(--line); border-radius: 12px; padding: 0.8rem 1rem; }
+  .model-grid .cell .v { font-family: ui-monospace, Menlo, monospace; font-weight: 600; font-size: 1rem; }
+  .model-grid .cell .l { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--dim); margin-top: 0.25rem; }
 
-  /* ── Footer ── */
-  footer { text-align: center; color: var(--faint); font-size: 0.82rem; padding-top: 1rem; line-height: 1.7; }
+  footer { text-align: center; color: var(--faint); font-size: 0.84rem; padding-top: 1.2rem; line-height: 1.7; }
   footer a { color: var(--dim); }
 
-  /* ── Loading ── */
-  .loading { position: fixed; inset: 0; background: rgba(11,14,20,0.8); display: none; align-items: center; justify-content: center; flex-direction: column; gap: 1rem; z-index: 50; backdrop-filter: blur(3px); }
+  .loading { position: fixed; inset: 0; background: rgba(7,7,14,0.82); display: none; align-items: center; justify-content: center; flex-direction: column; gap: 1rem; z-index: 50; backdrop-filter: blur(4px); }
   .loading.active { display: flex; }
-  .spinner { width: 38px; height: 38px; border: 3px solid var(--surface2); border-top-color: var(--teal); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  .spinner { width: 42px; height: 42px; border: 3px solid rgba(255,255,255,0.12); border-top-color: var(--teal); border-radius: 50%; animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-msg { color: var(--dim); font-size: 0.9rem; }
+  .loading-msg { color: var(--dim); font-size: 0.92rem; }
 
-  @media (max-width: 640px) {
-    .stage { grid-template-columns: 1fr; gap: 1rem; }
-    .ring-wrap { width: 240px; height: 240px; }
-    .side-stat { display: inline-block; width: 45%; }
+  @media (max-width: 680px) {
+    header { flex-direction: column; align-items: flex-start; }
+    .tagline { text-align: left; }
+    .stage { grid-template-columns: 1fr; gap: 1.4rem; }
+    .ring-wrap { width: 300px; height: 300px; }
+    .ring-time { font-size: 4.2rem; }
+    .side-stat { display: inline-block; width: 46%; }
   }
 </style>
 </head>
 <body>
+<div class="aurora"><b class="a1"></b><b class="a2"></b><b class="a3"></b></div>
+<div class="grain"></div>
+
 <div class="wrap">
 
   <header>
-    <div class="logo"><span class="mark"></span><span><span class="breath">Breath</span>Coach</span></div>
-    <div class="tagline">Sing into the mic and learn to breathe like a pro.</div>
+    <div class="logo"><span class="orb"></span><span><span class="grad-text">Breath</span>Coach</span></div>
+    <div class="tagline">Real-time breath &amp; phrase coaching for singers — sing into the mic and watch your line.</div>
   </header>
 
   <div class="controls">
@@ -201,7 +189,6 @@
     <button id="record_btn" class="btn-record">🎤 Record <span id="record_state"></span></button>
   </div>
 
-  <!-- The stage: breath ring flanked by two stats -->
   <div class="stage">
     <div class="side-stat">
       <div class="num idle" id="last_phrase">—</div>
@@ -209,7 +196,8 @@
     </div>
 
     <div class="ring-wrap">
-      <canvas id="breath_ring" width="280" height="280"></canvas>
+      <div class="ring-glow"></div>
+      <canvas id="breath_ring" width="360" height="360"></canvas>
       <div class="ring-center">
         <div class="ring-label">This phrase</div>
         <div class="ring-time idle" id="cur_phrase">0.0<span class="u">s</span></div>
@@ -225,31 +213,28 @@
 
   <div class="coach" id="coach_msg">Choose a recording and press play to begin.</div>
 
-  <!-- Phrase timeline: the breathing pattern of the whole take -->
-  <div class="timeline-card">
-    <div class="timeline-head">
+  <div class="card">
+    <div class="card-head">
       <h3>Your breathing pattern</h3>
       <div class="time"><span class="now" id="cur_time">0.00</span> / <span id="total_time">0.00</span> s</div>
     </div>
     <canvas id="timeline_canvas"></canvas>
-    <div class="timeline-legend">
-      <span><span class="sw" style="background: var(--teal)"></span>Your voice (sung)</span>
-      <span><span class="sw dot" style="background: var(--accent)"></span>Breath detected</span>
-      <span><span class="sw" style="background: rgba(108,140,255,0.3)"></span>Breath region</span>
+    <div class="legend">
+      <span><span class="sw" style="background: linear-gradient(90deg,#2ee6c8,#6c7bff)"></span>Your voice (sung)</span>
+      <span><span class="sw dot" style="background: var(--magenta)"></span>Breath detected</span>
+      <span><span class="sw" style="background: rgba(255,94,160,0.28)"></span>Breath region</span>
     </div>
   </div>
 
-  <!-- Session summary -->
   <div id="summary">
-    <div class="summary-card">
-      <h3>Session summary</h3>
+    <div class="card">
+      <h3 style="margin-bottom:1rem">Session summary</h3>
       <div class="stat-row" id="summary_stats"></div>
       <div id="phrase_list"></div>
       <div class="vs-line" id="vs_baseline"></div>
     </div>
   </div>
 
-  <!-- Analysis (technical, collapsed by default) -->
   <details class="analysis">
     <summary>Analysis &amp; model details</summary>
     <div class="analysis-body">
@@ -262,10 +247,10 @@
       <div class="analysis-sub"><span>Breath probability</span><span id="thresh_caption"></span></div>
       <canvas id="prob_canvas"></canvas>
       <div class="analysis-legend">
-        <span><span class="sw" style="background: var(--accent)"></span>BreathHead p(breath)</span>
+        <span><span class="sw" style="background: var(--indigo)"></span>BreathHead p(breath)</span>
         <span><span class="sw" style="background: var(--amber); height:2px"></span>threshold</span>
-        <span><span class="sw" style="background: var(--accent); opacity:0.45"></span>detected breath</span>
-        <span><span class="sw" style="background: var(--pink); opacity:0.5"></span>Ruinskiy 2007 baseline</span>
+        <span><span class="sw" style="background: var(--indigo); opacity:0.45"></span>detected breath</span>
+        <span><span class="sw" style="background: var(--magenta); opacity:0.55"></span>Ruinskiy 2007 baseline</span>
       </div>
 
       <div class="analysis-sub"><span>Model</span></div>
@@ -275,8 +260,8 @@
         <div class="cell"><div class="v" id="meta_ece">0.022</div><div class="l">Calibration (ECE)</div></div>
         <div class="cell"><div class="v" id="meta_latency">—</div><div class="l">Latency</div></div>
       </div>
-      <p style="color: var(--dim); font-size: 0.82rem; margin-top: 1rem; line-height: 1.6;">
-        BreathCoach detects audible breaths frame-by-frame using a small (~15K parameter) causal neural network on top of a frozen <strong>NanoPitch</strong> pitch-tracking backbone. Trained on VocalSet with weak labels from the Ruinskiy &amp; Lavner 2007 algorithm (the Respiro-en self-training recipe adapted to singing). The pink markers above are that 2007 DSP baseline running on the same audio, for comparison.
+      <p style="color: var(--dim); font-size: 0.84rem; margin-top: 1rem; line-height: 1.65;">
+        BreathCoach detects audible breaths frame-by-frame with a small (~15K parameter) causal neural network on top of a frozen <strong>NanoPitch</strong> pitch-tracking backbone. Trained on VocalSet with weak labels from the Ruinskiy &amp; Lavner 2007 algorithm (the Respiro-en self-training recipe adapted to singing). The magenta markers above are that 2007 DSP baseline on the same audio, for comparison.
       </p>
     </div>
   </details>
@@ -293,112 +278,67 @@
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════
-   BreathCoach — coaching-first UI
+   BreathCoach — bold/expressive UI (logic unchanged from coaching build)
    ═══════════════════════════════════════════════════════════════════ */
 
-const IDEAL_PHRASE_SEC = 8;   // ring fills to full at this phrase length
+const IDEAL_PHRASE_SEC = 8;
 
 const els = {
-  audio:       document.getElementById('audio_el'),
-  playBtn:     document.getElementById('play_btn'),
-  resetBtn:    document.getElementById('reset_btn'),
-  recordBtn:   document.getElementById('record_btn'),
-  recordState: document.getElementById('record_state'),
-  loadingMsg:  document.getElementById('loading_msg'),
-  clipSelect:  document.getElementById('clip_select'),
-  curTime:     document.getElementById('cur_time'),
-  totalTime:   document.getElementById('total_time'),
-  metaModel:   document.getElementById('meta_model'),
-  metaLatency: document.getElementById('meta_latency'),
-  ring:        document.getElementById('breath_ring'),
-  ringSub:     document.getElementById('ring_sub'),
-  timeline:    document.getElementById('timeline_canvas'),
-  specImg:     document.getElementById('spec_img'),
-  specOverlay: document.getElementById('spec_overlay'),
-  waveCanvas:  document.getElementById('wave_canvas'),
-  probCanvas:  document.getElementById('prob_canvas'),
-  threshCap:   document.getElementById('thresh_caption'),
-  curPhrase:   document.getElementById('cur_phrase'),
-  lastPhrase:  document.getElementById('last_phrase'),
-  breathCount: document.getElementById('breath_count'),
-  coachMsg:    document.getElementById('coach_msg'),
-  summary:     document.getElementById('summary'),
-  summaryStats:document.getElementById('summary_stats'),
-  phraseList:  document.getElementById('phrase_list'),
-  vsBaseline:  document.getElementById('vs_baseline'),
-  loading:     document.getElementById('loading'),
+  audio: document.getElementById('audio_el'), playBtn: document.getElementById('play_btn'),
+  resetBtn: document.getElementById('reset_btn'), recordBtn: document.getElementById('record_btn'),
+  recordState: document.getElementById('record_state'), loadingMsg: document.getElementById('loading_msg'),
+  clipSelect: document.getElementById('clip_select'), curTime: document.getElementById('cur_time'),
+  totalTime: document.getElementById('total_time'), metaModel: document.getElementById('meta_model'),
+  metaLatency: document.getElementById('meta_latency'), ring: document.getElementById('breath_ring'),
+  ringSub: document.getElementById('ring_sub'), timeline: document.getElementById('timeline_canvas'),
+  specImg: document.getElementById('spec_img'), specOverlay: document.getElementById('spec_overlay'),
+  waveCanvas: document.getElementById('wave_canvas'), probCanvas: document.getElementById('prob_canvas'),
+  threshCap: document.getElementById('thresh_caption'), curPhrase: document.getElementById('cur_phrase'),
+  lastPhrase: document.getElementById('last_phrase'), breathCount: document.getElementById('breath_count'),
+  coachMsg: document.getElementById('coach_msg'), summary: document.getElementById('summary'),
+  summaryStats: document.getElementById('summary_stats'), phraseList: document.getElementById('phrase_list'),
+  vsBaseline: document.getElementById('vs_baseline'), loading: document.getElementById('loading'),
 };
 
-let manifest = [];
-let predictions = null;
-let waveData = null;
-let animHandle = null;
+let manifest = [], predictions = null, waveData = null, animHandle = null;
 const CLIPS_BASE = 'clips/';
 
-// ─── Bootstrap ──────────────────────────────────────────────────────
 async function init() {
   els.loading.classList.add('active');
-  try { manifest = await fetch(CLIPS_BASE + 'manifest.json').then(r => r.ok ? r.json() : []); }
-  catch { manifest = []; }
-
+  try { manifest = await fetch(CLIPS_BASE + 'manifest.json').then(r => r.ok ? r.json() : []); } catch { manifest = []; }
   if (!manifest.length) {
     try {
       const single = await fetch('sample_predictions.json').then(r => r.json());
-      manifest = [{ id: 'sample', name: single.audio_file || 'sample.wav',
-        duration_sec: single.duration_sec, json: 'sample_predictions.json',
-        audio: 'sample.wav', _legacy: true }];
-    } catch (err) {
-      els.coachMsg.textContent = 'No recordings found. Run precompute_predictions first.';
-      els.loading.classList.remove('active'); return;
-    }
+      manifest = [{ id:'sample', name: single.audio_file||'sample.wav', duration_sec: single.duration_sec, json:'sample_predictions.json', audio:'sample.wav', _legacy:true }];
+    } catch { els.coachMsg.textContent = 'No recordings found. Run precompute_predictions first.'; els.loading.classList.remove('active'); return; }
   }
-
-  els.clipSelect.innerHTML = manifest.map(c =>
-    `<option value="${c.id}">${prettyName(c.name)} · ${c.duration_sec.toFixed(1)}s</option>`).join('');
+  els.clipSelect.innerHTML = manifest.map(c => `<option value="${c.id}">${prettyName(c.name)} · ${c.duration_sec.toFixed(1)}s</option>`).join('');
   els.clipSelect.addEventListener('change', () => loadClip(els.clipSelect.value));
   await loadClip(manifest[0].id);
 }
-
-function prettyName(n) {
-  return n.replace(/\.wav$/, '').replace(/_/g, ' ').replace(/\b(\w)/g, c => c.toUpperCase());
-}
+function prettyName(n){ return n.replace(/\.wav$/,'').replace(/_/g,' ').replace(/\b(\w)/g,c=>c.toUpperCase()); }
 
 async function loadClip(clipId) {
-  els.loading.classList.add('active');
-  els.loadingMsg.textContent = 'Loading recording…';
-  els.audio.pause(); els.playBtn.textContent = '▶ Play';
-  cancelAnimationFrame(animHandle);
-
-  const entry = manifest.find(c => c.id === clipId);
-  if (!entry) return;
+  els.loading.classList.add('active'); els.loadingMsg.textContent = 'Loading recording…';
+  els.audio.pause(); els.playBtn.textContent = '▶ Play'; cancelAnimationFrame(animHandle);
+  const entry = manifest.find(c => c.id === clipId); if (!entry) return;
   const base = entry._legacy ? '' : CLIPS_BASE;
   predictions = entry._inline ? entry._inline : await fetch(base + entry.json).then(r => r.json());
-
   const audioUrl = base + predictions.audio_file;
-  els.audio.src = audioUrl;
-  els.totalTime.textContent = predictions.duration_sec.toFixed(2);
+  els.audio.src = audioUrl; els.totalTime.textContent = predictions.duration_sec.toFixed(2);
   const set = (el, t) => { if (el) el.textContent = t; };
   set(els.metaModel, `BreathHead · ${predictions.model_meta.params.toLocaleString()} params`);
-  const lat = predictions.model_meta.per_frame_ms;
-  set(els.metaLatency, lat ? `${lat.toFixed(2)} ms/frame` : '—');
+  const lat = predictions.model_meta.per_frame_ms; set(els.metaLatency, lat ? `${lat.toFixed(2)} ms/frame` : '—');
   set(els.threshCap, `threshold ${predictions.threshold}`);
   els.specImg.src = predictions.spectrogram_file ? (base + predictions.spectrogram_file) : '';
-
-  try {
-    const buf = await fetch(audioUrl).then(r => r.arrayBuffer());
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    waveData = (await ctx.decodeAudioData(buf)).getChannelData(0);
-  } catch (e) { console.error(e); waveData = new Float32Array(0); }
-
-  resetUI();
-  drawAll(0);
-  els.loading.classList.remove('active');
+  try { const buf = await fetch(audioUrl).then(r => r.arrayBuffer()); const ctx = new (window.AudioContext||window.webkitAudioContext)(); waveData = (await ctx.decodeAudioData(buf)).getChannelData(0); }
+  catch (e) { console.error(e); waveData = new Float32Array(0); }
+  resetUI(); drawAll(0); els.loading.classList.remove('active');
 }
 
 function resetUI() {
   els.curTime.textContent = '0.00';
-  els.curPhrase.innerHTML = '0.0<span class="u">s</span>';
-  els.curPhrase.className = 'ring-time idle';
+  els.curPhrase.innerHTML = '0.0<span class="u">s</span>'; els.curPhrase.className = 'ring-time idle';
   els.ringSub.textContent = 'press play';
   els.lastPhrase.textContent = '—'; els.lastPhrase.className = 'num idle';
   els.breathCount.textContent = '0'; els.breathCount.className = 'num idle';
@@ -406,306 +346,173 @@ function resetUI() {
   els.summary.classList.remove('visible');
 }
 
-// ─── Canvas helpers ─────────────────────────────────────────────────
-function setupCanvas(canvas) {
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = canvas.clientWidth * dpr; canvas.height = canvas.clientHeight * dpr;
-  const ctx = canvas.getContext('2d'); ctx.setTransform(1,0,0,1,0,0); ctx.scale(dpr, dpr);
-  return ctx;
-}
+function setupCanvas(c){ const dpr=window.devicePixelRatio||1; c.width=c.clientWidth*dpr; c.height=c.clientHeight*dpr; const x=c.getContext('2d'); x.setTransform(1,0,0,1,0,0); x.scale(dpr,dpr); return x; }
 
-// ─── Breath ring (the centerpiece) ──────────────────────────────────
+// ── Hero ring: gradient stroke + glow, color shifts with phrase quality ──
 function drawRing(curPhraseDur, inBreath) {
   const ctx = setupCanvas(els.ring);
-  const W = els.ring.clientWidth, H = els.ring.clientHeight;
-  const cx = W/2, cy = H/2, r = Math.min(W, H)/2 - 16;
-  ctx.clearRect(0, 0, W, H);
-
+  const W = els.ring.clientWidth, H = els.ring.clientHeight, cx = W/2, cy = H/2, r = Math.min(W,H)/2 - 22;
+  ctx.clearRect(0,0,W,H);
   // Track
-  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2);
-  ctx.strokeStyle = '#1c2433'; ctx.lineWidth = 12; ctx.stroke();
-
-  // Progress arc
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.strokeStyle = 'rgba(255,255,255,0.07)'; ctx.lineWidth = 14; ctx.stroke();
+  // Progress arc with gradient + glow
   const frac = Math.min(1, curPhraseDur / IDEAL_PHRASE_SEC);
-  let color = getComputedStyle(document.documentElement).getPropertyValue('--teal').trim();
-  if (inBreath) color = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-  else if (curPhraseDur >= 30) color = getComputedStyle(document.documentElement).getPropertyValue('--red').trim();
-  else if (curPhraseDur >= 12) color = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-  else if (curPhraseDur < 2 && curPhraseDur > 0) color = getComputedStyle(document.documentElement).getPropertyValue('--amber').trim();
-
   if (frac > 0) {
+    const grad = ctx.createLinearGradient(0,0,W,H);
+    if (inBreath) { grad.addColorStop(0,'#2ee6c8'); grad.addColorStop(1,'#6c7bff'); }
+    else if (curPhraseDur >= 30) { grad.addColorStop(0,'#ff5d72'); grad.addColorStop(1,'#ff5ea0'); }
+    else if (curPhraseDur >= 12) { grad.addColorStop(0,'#6c7bff'); grad.addColorStop(1,'#ff5ea0'); }
+    else if (curPhraseDur < 2)   { grad.addColorStop(0,'#ffc24b'); grad.addColorStop(1,'#ff8d5e'); }
+    else { grad.addColorStop(0,'#2ee6c8'); grad.addColorStop(1,'#6c7bff'); }
     const start = -Math.PI/2;
-    ctx.beginPath(); ctx.arc(cx, cy, r, start, start + frac*Math.PI*2);
-    ctx.strokeStyle = color; ctx.lineWidth = 12; ctx.lineCap = 'round'; ctx.stroke();
+    ctx.save(); ctx.shadowBlur = 22; ctx.shadowColor = inBreath ? '#2ee6c8' : '#6c7bff';
+    ctx.beginPath(); ctx.arc(cx,cy,r,start,start+frac*Math.PI*2);
+    ctx.strokeStyle = grad; ctx.lineWidth = 14; ctx.lineCap = 'round'; ctx.stroke(); ctx.restore();
   }
-
-  // Breath flash — soft inner glow when a breath is happening
+  // Leading dot
+  if (frac > 0) {
+    const ang = -Math.PI/2 + frac*Math.PI*2, dx = cx + Math.cos(ang)*r, dy = cy + Math.sin(ang)*r;
+    ctx.beginPath(); ctx.arc(dx,dy,7,0,Math.PI*2); ctx.fillStyle = '#fff'; ctx.shadowBlur=12; ctx.shadowColor='#fff'; ctx.fill(); ctx.shadowBlur=0;
+  }
   if (inBreath) {
-    const g = ctx.createRadialGradient(cx, cy, r*0.3, cx, cy, r);
-    g.addColorStop(0, 'rgba(108,140,255,0.18)'); g.addColorStop(1, 'rgba(108,140,255,0)');
-    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.fillStyle = g; ctx.fill();
+    const g = ctx.createRadialGradient(cx,cy,r*0.25,cx,cy,r);
+    g.addColorStop(0,'rgba(46,230,200,0.22)'); g.addColorStop(1,'rgba(46,230,200,0)');
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fillStyle = g; ctx.fill();
   }
 }
 
-// ─── Main waveform view (real audio + breath markers) ───────────────
+// ── Main waveform: gradient-filled played portion, glowing playhead ──
 function drawTimeline(t) {
   const ctx = setupCanvas(els.timeline);
-  const W = els.timeline.clientWidth, H = els.timeline.clientHeight;
-  const dur = predictions.duration_sec;
-  const mid = H / 2;
-  const playX = (t / dur) * W;
-  ctx.clearRect(0, 0, W, H);
-
-  const events = predictions.phrases_from === 'breath_head'
-    ? predictions.predicted_events : predictions.ruinskiy_events;
-
-  // Breath regions — faint vertical bands behind the waveform
-  for (const ev of events) {
-    const x = (ev.start_sec / dur) * W;
-    const w = Math.max(3, ((ev.end_sec - ev.start_sec) / dur) * W);
-    ctx.fillStyle = 'rgba(108,140,255,0.16)';
-    ctx.fillRect(x, 0, w, H);
-  }
-
-  // Real waveform — peak-per-pixel, mirrored around center.
-  // Played portion is bright teal; upcoming portion is dim grey.
+  const W = els.timeline.clientWidth, H = els.timeline.clientHeight, dur = predictions.duration_sec, mid = H/2, playX = (t/dur)*W;
+  ctx.clearRect(0,0,W,H);
+  const events = predictions.phrases_from === 'breath_head' ? predictions.predicted_events : predictions.ruinskiy_events;
+  // Breath regions
+  for (const ev of events) { const x=(ev.start_sec/dur)*W, w=Math.max(3,((ev.end_sec-ev.start_sec)/dur)*W); ctx.fillStyle='rgba(255,94,160,0.13)'; ctx.fillRect(x,0,w,H); }
+  // Waveform — played gets a teal→indigo gradient, upcoming dim grey
   if (waveData && waveData.length) {
     const step = waveData.length / W;
-    for (let x = 0; x < W; x++) {
-      let mx = 0;
-      const s = Math.floor(x * step), e = Math.floor((x + 1) * step);
-      for (let i = s; i < e; i++) { const v = Math.abs(waveData[i]); if (v > mx) mx = v; }
-      const h = Math.max(0.6, mx * (mid - 6));
-      ctx.fillStyle = x <= playX ? 'rgba(52,217,196,0.9)' : 'rgba(94,107,128,0.5)';
-      ctx.fillRect(x, mid - h, 1, h * 2);
-    }
-  } else {
-    ctx.fillStyle = 'var(--faint)';
-    ctx.fillText('decoding audio…', 8, mid);
+    const playedGrad = ctx.createLinearGradient(0,0,W,0); playedGrad.addColorStop(0,'#2ee6c8'); playedGrad.addColorStop(1,'#6c7bff');
+    for (let x=0;x<W;x++){ let mx=0; const s=Math.floor(x*step),e=Math.floor((x+1)*step); for(let i=s;i<e;i++){const v=Math.abs(waveData[i]); if(v>mx)mx=v;} const h=Math.max(0.6,mx*(mid-7));
+      ctx.fillStyle = x<=playX ? playedGrad : 'rgba(120,130,156,0.4)'; ctx.fillRect(x,mid-h,1,h*2); }
   }
-
-  // Breath markers — blue dots along the bottom with a thin guide line
-  for (const ev of events) {
-    const x = ((ev.start_sec + ev.end_sec) / 2 / dur) * W;
-    ctx.strokeStyle = 'rgba(108,140,255,0.35)'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
-    ctx.beginPath(); ctx.arc(x, H - 6, 3.5, 0, Math.PI * 2);
-    ctx.fillStyle = '#6c8cff'; ctx.fill();
-    ctx.strokeStyle = '#0b0e14'; ctx.lineWidth = 1.5; ctx.stroke();
-  }
-
+  // Breath markers
+  for (const ev of events) { const x=((ev.start_sec+ev.end_sec)/2/dur)*W;
+    ctx.strokeStyle='rgba(255,94,160,0.3)'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke();
+    ctx.beginPath(); ctx.arc(x,H-7,4,0,Math.PI*2); ctx.fillStyle='#ff5ea0'; ctx.shadowBlur=8; ctx.shadowColor='#ff5ea0'; ctx.fill(); ctx.shadowBlur=0; }
   // Playhead
-  ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5;
-  ctx.beginPath(); ctx.moveTo(playX, 0); ctx.lineTo(playX, H); ctx.stroke();
-  ctx.beginPath(); ctx.arc(playX, 5, 3, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
+  ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(playX,0); ctx.lineTo(playX,H); ctx.stroke();
+  ctx.beginPath(); ctx.arc(playX,5,3.5,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.shadowBlur=10; ctx.shadowColor='#fff'; ctx.fill(); ctx.shadowBlur=0;
 }
 
-// ─── Analysis panel drawings ────────────────────────────────────────
 function drawWaveform() {
-  const ctx = setupCanvas(els.waveCanvas);
-  const W = els.waveCanvas.clientWidth, H = els.waveCanvas.clientHeight;
-  ctx.clearRect(0, 0, W, H);
-  if (!waveData || !waveData.length) return;
-  const step = waveData.length / W;
-  ctx.fillStyle = 'rgba(52,217,196,0.7)';
-  for (let x = 0; x < W; x++) {
-    let mx = 0; const s = Math.floor(x*step), e = Math.floor((x+1)*step);
-    for (let i = s; i < e; i++) { const v = Math.abs(waveData[i]); if (v > mx) mx = v; }
-    const h = mx * (H/2); ctx.fillRect(x, H/2 - h, 1, h*2);
-  }
+  const ctx = setupCanvas(els.waveCanvas); const W=els.waveCanvas.clientWidth,H=els.waveCanvas.clientHeight; ctx.clearRect(0,0,W,H);
+  if (!waveData||!waveData.length) return; const step=waveData.length/W;
+  const g=ctx.createLinearGradient(0,0,W,0); g.addColorStop(0,'#2ee6c8'); g.addColorStop(1,'#6c7bff'); ctx.fillStyle=g;
+  for(let x=0;x<W;x++){ let mx=0; const s=Math.floor(x*step),e=Math.floor((x+1)*step); for(let i=s;i<e;i++){const v=Math.abs(waveData[i]); if(v>mx)mx=v;} const h=mx*(H/2); ctx.fillRect(x,H/2-h,1,h*2); }
 }
-
 function drawProbCurve() {
-  const ctx = setupCanvas(els.probCanvas);
-  const W = els.probCanvas.clientWidth, H = els.probCanvas.clientHeight;
-  const dur = predictions.duration_sec; ctx.clearRect(0, 0, W, H);
-  ctx.fillStyle = 'rgba(255,108,140,0.32)';
-  for (const ev of predictions.ruinskiy_events) {
-    const x = (ev.start_sec/dur)*W, w = Math.max(2, ((ev.end_sec-ev.start_sec)/dur)*W);
-    ctx.fillRect(x, H-12, w, 10);
-  }
-  ctx.fillStyle = 'rgba(108,140,255,0.28)';
-  for (const ev of predictions.predicted_events) {
-    const x = (ev.start_sec/dur)*W, w = Math.max(2, ((ev.end_sec-ev.start_sec)/dur)*W);
-    ctx.fillRect(x, 0, w, H);
-  }
-  const yT = H*(1 - predictions.threshold);
-  ctx.strokeStyle = '#ffc24b'; ctx.lineWidth = 1; ctx.setLineDash([4,3]);
-  ctx.beginPath(); ctx.moveTo(0, yT); ctx.lineTo(W, yT); ctx.stroke(); ctx.setLineDash([]);
-  ctx.strokeStyle = 'rgba(108,140,255,0.95)'; ctx.lineWidth = 1.5; ctx.beginPath();
-  const probs = predictions.breath_prob;
-  for (let i = 0; i < probs.length; i++) { const x = (i/probs.length)*W, y = H*(1-probs[i]); i ? ctx.lineTo(x,y) : ctx.moveTo(x,y); }
-  ctx.stroke();
+  const ctx=setupCanvas(els.probCanvas); const W=els.probCanvas.clientWidth,H=els.probCanvas.clientHeight,dur=predictions.duration_sec; ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='rgba(255,94,160,0.3)'; for(const ev of predictions.ruinskiy_events){const x=(ev.start_sec/dur)*W,w=Math.max(2,((ev.end_sec-ev.start_sec)/dur)*W); ctx.fillRect(x,H-12,w,10);}
+  ctx.fillStyle='rgba(108,123,255,0.26)'; for(const ev of predictions.predicted_events){const x=(ev.start_sec/dur)*W,w=Math.max(2,((ev.end_sec-ev.start_sec)/dur)*W); ctx.fillRect(x,0,w,H);}
+  const yT=H*(1-predictions.threshold); ctx.strokeStyle='#ffc24b'; ctx.lineWidth=1; ctx.setLineDash([4,3]); ctx.beginPath(); ctx.moveTo(0,yT); ctx.lineTo(W,yT); ctx.stroke(); ctx.setLineDash([]);
+  const g=ctx.createLinearGradient(0,0,W,0); g.addColorStop(0,'#2ee6c8'); g.addColorStop(1,'#6c7bff'); ctx.strokeStyle=g; ctx.lineWidth=2; ctx.beginPath();
+  const probs=predictions.breath_prob; for(let i=0;i<probs.length;i++){const x=(i/probs.length)*W,y=H*(1-probs[i]); i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.stroke();
 }
-
 function drawSpectrogramOverlay() {
-  const ctx = setupCanvas(els.specOverlay);
-  const W = els.specOverlay.clientWidth, H = els.specOverlay.clientHeight, dur = predictions.duration_sec;
-  ctx.clearRect(0, 0, W, H);
-  ctx.fillStyle = 'rgba(255,108,140,0.55)';
-  for (const ev of predictions.ruinskiy_events) { const x=(ev.start_sec/dur)*W, w=Math.max(2,((ev.end_sec-ev.start_sec)/dur)*W); ctx.fillRect(x, H-7, w, 5); }
-  ctx.fillStyle = 'rgba(108,140,255,0.9)';
-  for (const ev of predictions.predicted_events) { const x=(ev.start_sec/dur)*W, w=Math.max(2,((ev.end_sec-ev.start_sec)/dur)*W); ctx.fillRect(x, 0, w, 5); }
+  const ctx=setupCanvas(els.specOverlay); const W=els.specOverlay.clientWidth,H=els.specOverlay.clientHeight,dur=predictions.duration_sec; ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='rgba(255,94,160,0.6)'; for(const ev of predictions.ruinskiy_events){const x=(ev.start_sec/dur)*W,w=Math.max(2,((ev.end_sec-ev.start_sec)/dur)*W); ctx.fillRect(x,H-7,w,5);}
+  ctx.fillStyle='rgba(108,123,255,0.92)'; for(const ev of predictions.predicted_events){const x=(ev.start_sec/dur)*W,w=Math.max(2,((ev.end_sec-ev.start_sec)/dur)*W); ctx.fillRect(x,0,w,5);}
 }
+function drawAnalysisPlayhead(t){ const dur=predictions.duration_sec; for(const c of [els.waveCanvas,els.probCanvas,els.specOverlay]){const ctx=c.getContext('2d'),W=c.clientWidth,H=c.clientHeight,x=(t/dur)*W; ctx.strokeStyle='rgba(255,255,255,0.8)'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke();} }
 
-function drawAnalysisPlayhead(t) {
-  const dur = predictions.duration_sec;
-  for (const c of [els.waveCanvas, els.probCanvas, els.specOverlay]) {
-    const ctx = c.getContext('2d'); const W = c.clientWidth, H = c.clientHeight;
-    const x = (t/dur)*W; ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
-  }
-}
+function drawAll(t){ const st=predictions?getCoachingState(t):{curPhraseDur:0,inBreath:false}; drawRing(st.curPhraseDur,st.inBreath); drawTimeline(t); drawWaveform(); drawProbCurve(); drawSpectrogramOverlay(); drawAnalysisPlayhead(t); }
 
-function drawAll(t) {
-  const st = predictions ? getCoachingState(t) : { curPhraseDur: 0, inBreath: false };
-  drawRing(st.curPhraseDur, st.inBreath);
-  drawTimeline(t);
-  drawWaveform(); drawProbCurve(); drawSpectrogramOverlay();
-  drawAnalysisPlayhead(t);
-}
-
-// ─── Coaching state ─────────────────────────────────────────────────
 function getCoachingState(t) {
-  const phrases = predictions.phrase_events;
-  const events = predictions.phrases_from === 'breath_head' ? predictions.predicted_events : predictions.ruinskiy_events;
-  let curPhraseDur = 0, lastPhraseDur = null, inBreath = false, breathCount = 0;
-  for (const ev of events) {
-    if (ev.end_sec <= t) breathCount++;
-    if (ev.start_sec <= t && t < ev.end_sec) inBreath = true;
-  }
-  for (let i = 0; i < phrases.length; i++) {
-    const ph = phrases[i];
-    if (ph.start_sec <= t && t < ph.end_sec) { curPhraseDur = t - ph.start_sec; if (i>0) lastPhraseDur = phrases[i-1].duration_sec; break; }
-    else if (t >= ph.end_sec) lastPhraseDur = ph.duration_sec;
-  }
+  const phrases = predictions.phrase_events, events = predictions.phrases_from==='breath_head'?predictions.predicted_events:predictions.ruinskiy_events;
+  let curPhraseDur=0,lastPhraseDur=null,inBreath=false,breathCount=0;
+  for(const ev of events){ if(ev.end_sec<=t)breathCount++; if(ev.start_sec<=t&&t<ev.end_sec)inBreath=true; }
+  for(let i=0;i<phrases.length;i++){ const ph=phrases[i]; if(ph.start_sec<=t&&t<ph.end_sec){curPhraseDur=t-ph.start_sec; if(i>0)lastPhraseDur=phrases[i-1].duration_sec; break;} else if(t>=ph.end_sec)lastPhraseDur=ph.duration_sec; }
   return { curPhraseDur, lastPhraseDur, breathCount, inBreath };
 }
-
-function phraseQuality(d) {
-  if (d < 2)  return { msg: 'Short phrase — try to carry the line a little longer.', cls: 'warn' };
-  if (d < 4)  return { msg: 'Nice — see if you can stretch the next one further.', cls: 'warn' };
-  if (d < 8)  return { msg: 'Comfortable, well-supported phrasing.', cls: 'good' };
-  if (d < 12) return { msg: 'Strong breath support — lovely long phrase.', cls: 'good' };
-  if (d < 30) return { msg: 'Impressive control on that long phrase.', cls: 'breath' };
-  return        { msg: '30+ seconds without a breath — ease off before you strain.', cls: 'danger' };
+function phraseQuality(d){
+  if(d<2) return {msg:'Short phrase — try to carry the line a little longer.',cls:'warn'};
+  if(d<4) return {msg:'Nice — see if you can stretch the next one further.',cls:'warn'};
+  if(d<8) return {msg:'Comfortable, well-supported phrasing.',cls:'good'};
+  if(d<12)return {msg:'Strong breath support — lovely long phrase.',cls:'good'};
+  if(d<30)return {msg:'Impressive control on that long phrase.',cls:'breath'};
+  return {msg:'30+ seconds without a breath — ease off before you strain.',cls:'danger'};
 }
 
-// ─── Animation loop ─────────────────────────────────────────────────
 function tick() {
   if (els.audio.paused) return;
-  const t = els.audio.currentTime;
-  els.curTime.textContent = t.toFixed(2);
+  const t = els.audio.currentTime; els.curTime.textContent = t.toFixed(2);
   const st = getCoachingState(t);
-
-  drawRing(st.curPhraseDur, st.inBreath);
-  drawTimeline(t);
-  // Analysis canvases are display:none when collapsed (clientWidth 0 → draws are no-ops)
+  drawRing(st.curPhraseDur, st.inBreath); drawTimeline(t);
   drawWaveform(); drawProbCurve(); drawSpectrogramOverlay(); drawAnalysisPlayhead(t);
-
   els.curPhrase.innerHTML = st.curPhraseDur.toFixed(1) + '<span class="u">s</span>';
-  els.curPhrase.className = 'ring-time ' + (st.curPhraseDur >= 30 ? '' : st.curPhraseDur > 0.3 ? '' : 'idle');
+  els.curPhrase.className = 'ring-time ' + (st.curPhraseDur > 0.3 ? '' : 'idle');
   els.ringSub.textContent = st.inBreath ? 'breathing…' : (st.curPhraseDur > 0.3 ? 'singing' : '…');
-
-  if (st.lastPhraseDur !== null) { els.lastPhrase.innerHTML = st.lastPhraseDur.toFixed(1) + '<span style="font-size:1rem;color:var(--dim)">s</span>'; els.lastPhrase.className = 'num'; }
-
-  const prev = parseInt(els.breathCount.textContent, 10) || 0;
-  els.breathCount.textContent = st.breathCount;
-  if (st.breathCount > prev) { els.breathCount.className = 'num pulse'; setTimeout(()=>{ if (els.breathCount.className==='num pulse') els.breathCount.className='num'; }, 650); }
-  else if (st.breathCount === 0) els.breathCount.className = 'num idle';
-  else if (!els.breathCount.className.includes('pulse')) els.breathCount.className = 'num';
-
-  if (st.inBreath) {
-    els.coachMsg.textContent = '🫁  Breath — phrase reset.'; els.coachMsg.className = 'coach breath';
-  } else if (st.curPhraseDur >= 1.2) {
-    const q = phraseQuality(st.curPhraseDur); els.coachMsg.textContent = q.msg; els.coachMsg.className = 'coach ' + q.cls;
-  } else {
-    els.coachMsg.textContent = 'Carrying the line…'; els.coachMsg.className = 'coach';
-  }
-
+  if (st.lastPhraseDur !== null) { els.lastPhrase.innerHTML = st.lastPhraseDur.toFixed(1) + '<span class="u" style="font-size:1rem;-webkit-text-fill-color:var(--dim)">s</span>'; els.lastPhrase.className = 'num'; }
+  const prev = parseInt(els.breathCount.textContent,10)||0; els.breathCount.textContent = st.breathCount;
+  if (st.breathCount>prev){ els.breathCount.className='num pulse'; setTimeout(()=>{ if(els.breathCount.className==='num pulse')els.breathCount.className='num'; },650); }
+  else if (st.breathCount===0) els.breathCount.className='num idle';
+  else if (!els.breathCount.className.includes('pulse')) els.breathCount.className='num';
+  if (st.inBreath){ els.coachMsg.textContent='🫁  Breath — phrase reset.'; els.coachMsg.className='coach breath'; }
+  else if (st.curPhraseDur>=1.2){ const q=phraseQuality(st.curPhraseDur); els.coachMsg.textContent=q.msg; els.coachMsg.className='coach '+q.cls; }
+  else { els.coachMsg.textContent='Carrying the line…'; els.coachMsg.className='coach'; }
   animHandle = requestAnimationFrame(tick);
 }
 
-// ─── Summary ────────────────────────────────────────────────────────
 function showSummary() {
-  const phrases = predictions.phrase_events;
-  if (!phrases.length) return;
-  const total = phrases.reduce((s,p)=>s+p.duration_sec, 0), avg = total/phrases.length;
-  const longest = Math.max(...phrases.map(p=>p.duration_sec)), shortest = Math.min(...phrases.map(p=>p.duration_sec));
+  const phrases = predictions.phrase_events; if(!phrases.length) return;
+  const total=phrases.reduce((s,p)=>s+p.duration_sec,0), avg=total/phrases.length, longest=Math.max(...phrases.map(p=>p.duration_sec)), shortest=Math.min(...phrases.map(p=>p.duration_sec));
   els.summaryStats.innerHTML = `
     <div><div class="v">${phrases.length}</div><div class="l">Phrases</div></div>
     <div><div class="v">${avg.toFixed(1)}<span class="u">s</span></div><div class="l">Avg length</div></div>
     <div><div class="v">${longest.toFixed(1)}<span class="u">s</span></div><div class="l">Longest</div></div>
     <div><div class="v">${shortest.toFixed(1)}<span class="u">s</span></div><div class="l">Shortest</div></div>`;
-  const maxD = Math.max(longest, 0.1);
-  els.phraseList.innerHTML = phrases.map((p,i)=>{
-    const cls = p.duration_sec < 2 ? 'short' : p.duration_sec >= 12 ? 'long' : '';
-    return `<div class="phrase-row"><div class="n">#${i+1}</div><div><div class="bar ${cls}" style="width:${(p.duration_sec/maxD*100).toFixed(0)}%"></div></div><div class="d">${p.duration_sec.toFixed(1)} s</div></div>`;
-  }).join('');
-  const bh = predictions.predicted_events.length, ru = predictions.ruinskiy_events.length, d = bh - ru;
-  els.vsBaseline.innerHTML = `Detected <strong style="color:var(--teal)">${bh}</strong> breaths. ` +
-    (d > 0 ? `That's ${d} more than the classic 2007 DSP baseline (${ru}) — the neural model catches softer inhales.`
-           : d < 0 ? `The 2007 baseline flagged ${-d} more (${ru}).` : `Same count as the 2007 baseline.`);
+  const maxD = Math.max(longest,0.1);
+  els.phraseList.innerHTML = phrases.map((p,i)=>{ const cls=p.duration_sec<2?'short':p.duration_sec>=12?'long':''; return `<div class="phrase-row"><div class="n">#${i+1}</div><div><div class="bar ${cls}" style="width:${(p.duration_sec/maxD*100).toFixed(0)}%"></div></div><div class="d">${p.duration_sec.toFixed(1)} s</div></div>`; }).join('');
+  const bh=predictions.predicted_events.length, ru=predictions.ruinskiy_events.length, d=bh-ru;
+  els.vsBaseline.innerHTML = `Detected <strong style="color:var(--teal)">${bh}</strong> breaths. ` + (d>0?`That's ${d} more than the classic 2007 DSP baseline (${ru}) — the neural model catches softer inhales.`:d<0?`The 2007 baseline flagged ${-d} more (${ru}).`:`Same count as the 2007 baseline.`);
   els.summary.classList.add('visible');
 }
 
-// ─── Controls ───────────────────────────────────────────────────────
-els.playBtn.addEventListener('click', () => {
-  if (els.audio.paused) { els.audio.play(); els.playBtn.textContent = '⏸ Pause'; els.summary.classList.remove('visible'); tick(); }
-  else { els.audio.pause(); els.playBtn.textContent = '▶ Play'; }
-});
-els.resetBtn.addEventListener('click', () => { els.audio.pause(); els.audio.currentTime = 0; els.playBtn.textContent='▶ Play'; resetUI(); drawAll(0); });
-els.audio.addEventListener('ended', () => {
-  els.playBtn.textContent = '▶ Play'; cancelAnimationFrame(animHandle);
-  const st = getCoachingState(predictions.duration_sec);
-  els.breathCount.textContent = st.breathCount; els.breathCount.className = 'num';
-  els.ringSub.textContent = 'done'; els.coachMsg.textContent = 'Session complete — see your summary below.'; els.coachMsg.className = 'coach good';
-  showSummary();
-});
+els.playBtn.addEventListener('click', () => { if (els.audio.paused){ els.audio.play(); els.playBtn.textContent='⏸ Pause'; els.summary.classList.remove('visible'); tick(); } else { els.audio.pause(); els.playBtn.textContent='▶ Play'; } });
+els.resetBtn.addEventListener('click', () => { els.audio.pause(); els.audio.currentTime=0; els.playBtn.textContent='▶ Play'; resetUI(); drawAll(0); });
+els.audio.addEventListener('ended', () => { els.playBtn.textContent='▶ Play'; cancelAnimationFrame(animHandle); const st=getCoachingState(predictions.duration_sec); els.breathCount.textContent=st.breathCount; els.breathCount.className='num'; els.ringSub.textContent='done'; els.coachMsg.textContent='Session complete — see your summary below.'; els.coachMsg.className='coach good'; showSummary(); });
 window.addEventListener('resize', () => { if (predictions) drawAll(els.audio.currentTime); });
-
-// Redraw the analysis canvases whenever the panel is expanded (they have zero
-// width while collapsed, so drawing them only happens once they're visible).
-document.querySelector('details.analysis').addEventListener('toggle', (e) => {
-  if (e.target.open && predictions) requestAnimationFrame(() => drawAll(els.audio.currentTime));
-});
-// Redraw the spectrogram overlay once the image actually loads.
+document.querySelector('details.analysis').addEventListener('toggle', (e) => { if (e.target.open && predictions) requestAnimationFrame(() => drawAll(els.audio.currentTime)); });
 els.specImg.addEventListener('load', () => { if (predictions) drawSpectrogramOverlay(); });
 
 /* ─── Mic recording → POST /process ─── */
 const REC_MAX_SEC = 15, REC_SR = 16000;
 let rec = { active:false, ctx:null, stream:null, chunks:[], startTime:0, processor:null };
 function encodeWav(samples, sr) {
-  const pcm = new Int16Array(samples.length);
-  for (let i=0;i<samples.length;i++){ const s=Math.max(-1,Math.min(1,samples[i])); pcm[i]=s<0?s*0x8000:s*0x7FFF; }
-  const buf = new ArrayBuffer(44+pcm.byteLength), v = new DataView(buf);
-  const ws=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));};
-  ws(0,'RIFF'); v.setUint32(4,36+pcm.byteLength,true); ws(8,'WAVE'); ws(12,'fmt ');
-  v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
-  v.setUint32(24,sr,true); v.setUint32(28,sr*2,true); v.setUint16(32,2,true); v.setUint16(34,16,true);
-  ws(36,'data'); v.setUint32(40,pcm.byteLength,true); new Int16Array(buf,44).set(pcm);
+  const pcm=new Int16Array(samples.length); for(let i=0;i<samples.length;i++){const s=Math.max(-1,Math.min(1,samples[i])); pcm[i]=s<0?s*0x8000:s*0x7FFF;}
+  const buf=new ArrayBuffer(44+pcm.byteLength),v=new DataView(buf); const ws=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));};
+  ws(0,'RIFF'); v.setUint32(4,36+pcm.byteLength,true); ws(8,'WAVE'); ws(12,'fmt '); v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
+  v.setUint32(24,sr,true); v.setUint32(28,sr*2,true); v.setUint16(32,2,true); v.setUint16(34,16,true); ws(36,'data'); v.setUint32(40,pcm.byteLength,true); new Int16Array(buf,44).set(pcm);
   return new Blob([buf],{type:'audio/wav'});
 }
 async function startRecording() {
   if (rec.active) return;
   rec.stream = await navigator.mediaDevices.getUserMedia({ audio:{channelCount:1,echoCancellation:false,noiseSuppression:false,autoGainControl:false} });
-  rec.ctx = new (window.AudioContext||window.webkitAudioContext)();
-  const src = rec.ctx.createMediaStreamSource(rec.stream);
-  const proc = rec.ctx.createScriptProcessor(4096,1,1);
-  rec.chunks = []; proc.onaudioprocess = e => rec.chunks.push(new Float32Array(e.inputBuffer.getChannelData(0)));
-  src.connect(proc); proc.connect(rec.ctx.destination); rec.processor = proc; rec.active = true; rec.startTime = performance.now();
-  els.recordBtn.classList.add('recording'); els.recordBtn.firstChild.textContent = '⏹ Stop ';
-  const tk = () => { if (!rec.active) return; const el=(performance.now()-rec.startTime)/1000; els.recordState.textContent = el.toFixed(1)+'s'; if (el>=REC_MAX_SEC) stopRecording(); else requestAnimationFrame(tk); }; tk();
+  rec.ctx = new (window.AudioContext||window.webkitAudioContext)(); const src=rec.ctx.createMediaStreamSource(rec.stream); const proc=rec.ctx.createScriptProcessor(4096,1,1);
+  rec.chunks=[]; proc.onaudioprocess = e => rec.chunks.push(new Float32Array(e.inputBuffer.getChannelData(0)));
+  src.connect(proc); proc.connect(rec.ctx.destination); rec.processor=proc; rec.active=true; rec.startTime=performance.now();
+  els.recordBtn.classList.add('recording'); els.recordBtn.firstChild.textContent='⏹ Stop ';
+  const tk=()=>{ if(!rec.active)return; const el=(performance.now()-rec.startTime)/1000; els.recordState.textContent=el.toFixed(1)+'s'; if(el>=REC_MAX_SEC)stopRecording(); else requestAnimationFrame(tk); }; tk();
 }
 async function stopRecording() {
-  if (!rec.active) return; rec.active = false; rec.processor.disconnect(); rec.stream.getTracks().forEach(t=>t.stop());
-  const total = rec.chunks.reduce((s,c)=>s+c.length,0), all = new Float32Array(total); let off=0;
-  for (const c of rec.chunks){ all.set(c,off); off+=c.length; }
-  const ratio = REC_SR/rec.ctx.sampleRate, dl = Math.floor(all.length*ratio), dst = new Float32Array(dl);
-  for (let i=0;i<dl;i++){ const si=i/ratio, i0=Math.floor(si), tt=si-i0; dst[i]=(1-tt)*all[i0]+tt*all[Math.min(i0+1,all.length-1)]; }
+  if (!rec.active) return; rec.active=false; rec.processor.disconnect(); rec.stream.getTracks().forEach(t=>t.stop());
+  const total=rec.chunks.reduce((s,c)=>s+c.length,0), all=new Float32Array(total); let off=0; for(const c of rec.chunks){all.set(c,off); off+=c.length;}
+  const ratio=REC_SR/rec.ctx.sampleRate, dl=Math.floor(all.length*ratio), dst=new Float32Array(dl);
+  for(let i=0;i<dl;i++){const si=i/ratio,i0=Math.floor(si),tt=si-i0; dst[i]=(1-tt)*all[i0]+tt*all[Math.min(i0+1,all.length-1)];}
   rec.ctx.close(); rec.chunks=[];
-  els.recordBtn.classList.remove('recording'); els.recordBtn.firstChild.textContent = '🎤 Record '; els.recordState.textContent='';
-  els.loading.classList.add('active'); els.loadingMsg.textContent = 'Analyzing your singing…';
+  els.recordBtn.classList.remove('recording'); els.recordBtn.firstChild.textContent='🎤 Record '; els.recordState.textContent='';
+  els.loading.classList.add('active'); els.loadingMsg.textContent='Analyzing your singing…';
   try {
     const data = await fetch('/process',{method:'POST',body:encodeWav(dst,REC_SR)}).then(r=>r.json());
     if (data.error) throw new Error(data.error);
@@ -713,12 +520,9 @@ async function stopRecording() {
     manifest.unshift({ id, name:'My Recording', duration_sec:data.duration_sec, json:'', audio:data.audio_file, spectrogram:data.spectrogram_file, _inline:data, _legacy:true });
     els.clipSelect.innerHTML = manifest.map(c=>`<option value="${c.id}">${prettyName(c.name)} · ${c.duration_sec.toFixed(1)}s</option>`).join('');
     els.clipSelect.value = id; await loadClip(id);
-  } catch (err) { console.error(err); els.coachMsg.textContent = 'Recording failed: '+err.message; els.coachMsg.className='coach danger'; els.loading.classList.remove('active'); }
+  } catch (err) { console.error(err); els.coachMsg.textContent='Recording failed: '+err.message; els.coachMsg.className='coach danger'; els.loading.classList.remove('active'); }
 }
-els.recordBtn.addEventListener('click', async () => {
-  if (rec.active) { stopRecording(); return; }
-  try { await startRecording(); } catch { els.coachMsg.textContent='Microphone permission denied.'; els.coachMsg.className='coach danger'; }
-});
+els.recordBtn.addEventListener('click', async () => { if (rec.active){ stopRecording(); return; } try { await startRecording(); } catch { els.coachMsg.textContent='Microphone permission denied.'; els.coachMsg.className='coach danger'; } });
 
 init().catch(err => { console.error(err); els.coachMsg.textContent='Error: '+err.message; els.loading.classList.remove('active'); });
 </script>

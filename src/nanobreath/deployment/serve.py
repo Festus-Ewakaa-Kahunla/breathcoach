@@ -169,6 +169,64 @@ def process_audio(waveform: np.ndarray, sample_rate: int,
 
 
 class Handler(SimpleHTTPRequestHandler):
+    # HTTP/1.1 enables keep-alive. We also implement byte-range (206) responses
+    # below, because browser <audio> elements require them to load a media file.
+    # Python's stdlib SimpleHTTPRequestHandler ignores Range and replies 200 with
+    # the whole file, which leaves the audio element stuck in readyState 0.
+    protocol_version = "HTTP/1.1"
+
+    def do_GET(self):
+        if self.headers.get("Range"):
+            self._serve_range()
+        else:
+            super().do_GET()
+
+    def _serve_range(self):
+        """Serve a 206 Partial Content response for a Range request."""
+        import os as _os
+        path = self.translate_path(self.path)
+        try:
+            f = open(path, "rb")
+        except OSError:
+            self.send_error(404, "File not found"); return
+        try:
+            fs = _os.fstat(f.fileno())
+            size = fs.st_size
+            rng = self.headers.get("Range", "").strip()
+            try:
+                spec = rng.split("=", 1)[1]
+                start_s, _, end_s = spec.partition("-")
+                start = int(start_s) if start_s else 0
+                end = int(end_s) if end_s else size - 1
+                end = min(end, size - 1)
+                if start < 0 or start > end:
+                    raise ValueError
+            except (IndexError, ValueError):
+                self.send_response(416)
+                self.send_header("Content-Range", f"bytes */{size}")
+                self.end_headers(); return
+            length = end - start + 1
+            self.send_response(206)
+            self.send_header("Content-Type", self.guess_type(path))
+            self.send_header("Accept-Ranges", "bytes")
+            self.send_header("Content-Range", f"bytes {start}-{end}/{size}")
+            self.send_header("Content-Length", str(length))
+            self.send_header("Last-Modified", self.date_time_string(fs.st_mtime))
+            self.end_headers()
+            f.seek(start)
+            remaining = length
+            while remaining > 0:
+                chunk = f.read(min(64 * 1024, remaining))
+                if not chunk:
+                    break
+                try:
+                    self.wfile.write(chunk)
+                except (BrokenPipeError, ConnectionResetError):
+                    break
+                remaining -= len(chunk)
+        finally:
+            f.close()
+
     def _send_json(self, obj: dict, code: int = 200):
         body = json.dumps(obj).encode("utf-8")
         self.send_response(code)

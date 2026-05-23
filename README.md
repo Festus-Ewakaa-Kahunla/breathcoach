@@ -1,16 +1,30 @@
-# BreathCoach
+<div align="center">
+
+<img src="docs/assets/hero.svg" alt="BreathCoach — real-time breath & phrase coaching for singers" width="100%">
+
+<p>
+  <a href="#run-the-demo"><img alt="Run the demo" src="https://img.shields.io/badge/Run%20the%20demo-2ee6c8?style=for-the-badge&labelColor=0b1020"></a>
+  <a href="#how-it-works"><img alt="How it works" src="https://img.shields.io/badge/How%20it%20works-6c7bff?style=for-the-badge&labelColor=0b1020"></a>
+  <a href="#results"><img alt="Results" src="https://img.shields.io/badge/Results-ff5ea0?style=for-the-badge&labelColor=0b1020"></a>
+</p>
+
+<p>
+  <img alt="params" src="https://img.shields.io/badge/params-15%2C705-2ee6c8?style=flat-square&labelColor=0b1020">
+  <img alt="latency" src="https://img.shields.io/badge/latency-~0.05%20ms%2Fframe-6c7bff?style=flat-square&labelColor=0b1020">
+  <img alt="val PR-AUC" src="https://img.shields.io/badge/val%20PR--AUC-0.65-ff5ea0?style=flat-square&labelColor=0b1020">
+  <img alt="ECE" src="https://img.shields.io/badge/ECE-0.022-2ee6c8?style=flat-square&labelColor=0b1020">
+  <img alt="python" src="https://img.shields.io/badge/python-3.11-6c7bff?style=flat-square&labelColor=0b1020&logo=python&logoColor=white">
+  <img alt="pytorch" src="https://img.shields.io/badge/PyTorch-frozen%20backbone-ff5ea0?style=flat-square&labelColor=0b1020&logo=pytorch&logoColor=white">
+  <img alt="license" src="https://img.shields.io/badge/license-TBD-8b93a7?style=flat-square&labelColor=0b1020">
+</p>
+
+<img src="docs/assets/demo.gif" alt="BreathCoach demo — the breath ring, live phrase length, breath count, and coaching feedback update as the singing plays" width="100%">
+
+<sub>Live coaching on a held-out VocalSet clip: phrase length fills the ring, the breath count rises, and the waveform marks each detected breath.</sub>
+
+</div>
 
 Real-time singing breath & phrase coaching in the browser. A small (~15K-parameter) causal neural network detects audible breath events frame by frame, sits on top of a frozen pitch-tracking backbone ([NanoPitch](#backbone)), and turns its output into musically useful feedback: phrase length, breath count, and live coaching messages.
-
-| | |
-|---|---|
-| **Python package** | [`nanobreath`](src/nanobreath/) |
-| **Browser demo** | precomputed clips + 🎤 live recording |
-| **Model size** | 15,705 trainable parameters (head only — backbone is frozen) |
-| **Inference latency** | ~0.05 ms / 10 ms audio frame on a laptop CPU (PyTorch) |
-| **Val PR-AUC** | 0.65 on held-out singers, weak-label eval (Ruinskiy pseudo-labels) |
-| **Expected Calibration Error** | 0.022 — outputs are well-calibrated probabilities |
-| **License** | TBD |
 
 ---
 

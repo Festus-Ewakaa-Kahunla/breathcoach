@@ -1,0 +1,208 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420" role="img" aria-label="BreathCoach — real-time breath and phrase coaching for singers">
+  <defs>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2ee6c8"/>
+      <stop offset="50%" stop-color="#6c7bff"/>
+      <stop offset="100%" stop-color="#ff5ea0"/>
+    </linearGradient>
+    <linearGradient id="wave" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#2ee6c8"/>
+      <stop offset="50%" stop-color="#6c7bff"/>
+      <stop offset="100%" stop-color="#ff5ea0"/>
+    </linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0e1a"/>
+      <stop offset="100%" stop-color="#0c1226"/>
+    </linearGradient>
+    <radialGradient id="gTeal" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#2ee6c8" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#2ee6c8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gIndigo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#6c7bff" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#6c7bff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gMag" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff5ea0" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#ff5ea0" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- base -->
+  <rect width="1200" height="420" fill="url(#bg)"/>
+
+  <!-- drifting aurora -->
+  <g>
+    <ellipse cx="300" cy="150" rx="300" ry="210" fill="url(#gTeal)">
+      <animateTransform attributeName="transform" type="translate" values="0 0; 70 40; -20 -30; 0 0" dur="17s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse cx="640" cy="280" rx="340" ry="230" fill="url(#gIndigo)">
+      <animateTransform attributeName="transform" type="translate" values="0 0; -60 -30; 40 30; 0 0" dur="21s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse cx="950" cy="150" rx="300" ry="200" fill="url(#gMag)">
+      <animateTransform attributeName="transform" type="translate" values="0 0; 40 -40; -50 20; 0 0" dur="19s" repeatCount="indefinite"/>
+    </ellipse>
+  </g>
+
+  <!-- breathing halo rings behind the wordmark -->
+  <g fill="none" stroke="url(#brand)">
+    <circle cx="600.0" cy="172" r="118" stroke-width="2" opacity="0.30">
+      <animate attributeName="r" values="112;132;112" dur="5s" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.37 0 0.63 1;0.37 0 0.63 1" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.12;0.40;0.12" dur="5s" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.37 0 0.63 1;0.37 0 0.63 1" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="600.0" cy="172" r="150" stroke-width="1.5" opacity="0.18">
+      <animate attributeName="r" values="150;172;150" dur="5s" begin="-1.2s" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.37 0 0.63 1;0.37 0 0.63 1" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.06;0.24;0.06" dur="5s" begin="-1.2s" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.37 0 0.63 1;0.37 0 0.63 1" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- wordmark -->
+  <text x="600.0" y="205" text-anchor="middle" filter="url(#soft)"
+        font-family="'Space Grotesk','Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif"
+        font-weight="800" font-size="108" letter-spacing="-3" fill="url(#brand)">BreathCoach</text>
+
+  <!-- tagline -->
+  <text x="600.0" y="252" text-anchor="middle"
+        font-family="'Space Grotesk','Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif"
+        font-weight="500" font-size="23" letter-spacing="0.4" fill="#aab4d6">Real-time breath &amp; phrase coaching for singers — right in the browser</text>
+
+  <!-- live equalizer -->
+  <g>
+    <rect x="312.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;35.3;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="1.90s" begin="-0.00s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;314.4;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="1.90s" begin="-0.00s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="330.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;40.3;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.00s" begin="-0.16s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;311.9;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.00s" begin="-0.16s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="348.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;45.2;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.10s" begin="-0.32s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;309.4;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.10s" begin="-0.32s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="366.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;50.0;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.20s" begin="-0.48s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;307.0;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.20s" begin="-0.48s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="384.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;54.7;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.30s" begin="-0.64s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;304.6;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.30s" begin="-0.64s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="402.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;59.2;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="1.90s" begin="-0.80s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;302.4;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="1.90s" begin="-0.80s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="420.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;63.5;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.00s" begin="-0.96s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;300.3;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.00s" begin="-0.96s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="438.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;67.5;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.10s" begin="-1.12s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;298.3;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.10s" begin="-1.12s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="456.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;71.2;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.20s" begin="-1.28s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;296.4;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.20s" begin="-1.28s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="474.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;74.5;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.30s" begin="-1.44s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;294.8;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.30s" begin="-1.44s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="492.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;77.5;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="1.90s" begin="-1.60s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;293.3;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="1.90s" begin="-1.60s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="510.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;80.0;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.00s" begin="-1.76s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;292.0;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.00s" begin="-1.76s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="528.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;82.1;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.10s" begin="-1.92s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;290.9;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.10s" begin="-1.92s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="546.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;83.8;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.20s" begin="-2.08s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;290.1;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.20s" begin="-2.08s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="564.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;85.0;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.30s" begin="-2.24s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;289.5;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.30s" begin="-2.24s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="582.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;85.8;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="1.90s" begin="-2.40s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;289.1;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="1.90s" begin="-2.40s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="600.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;86.0;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.00s" begin="-2.56s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;289.0;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.00s" begin="-2.56s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="618.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;85.8;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.10s" begin="-2.72s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;289.1;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.10s" begin="-2.72s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="636.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;85.0;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.20s" begin="-2.88s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;289.5;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.20s" begin="-2.88s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="654.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;83.8;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.30s" begin="-3.04s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;290.1;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.30s" begin="-3.04s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="672.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;82.1;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="1.90s" begin="-3.20s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;290.9;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="1.90s" begin="-3.20s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="690.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;80.0;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.00s" begin="-3.36s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;292.0;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.00s" begin="-3.36s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="708.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;77.5;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.10s" begin="-3.52s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;293.3;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.10s" begin="-3.52s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="726.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;74.5;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.20s" begin="-3.68s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;294.8;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.20s" begin="-3.68s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="744.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;71.2;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.30s" begin="-3.84s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;296.4;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.30s" begin="-3.84s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="762.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;67.5;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="1.90s" begin="-4.00s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;298.3;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="1.90s" begin="-4.00s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="780.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;63.5;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.00s" begin="-4.16s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;300.3;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.00s" begin="-4.16s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="798.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;59.2;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.10s" begin="-4.32s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;302.4;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.10s" begin="-4.32s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="816.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;54.7;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.20s" begin="-4.48s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;304.6;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.20s" begin="-4.48s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="834.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;50.0;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.30s" begin="-4.64s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;307.0;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.30s" begin="-4.64s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="852.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;45.2;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="1.90s" begin="-4.80s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;309.4;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="1.90s" begin="-4.80s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="870.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;40.3;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.00s" begin="-4.96s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;311.9;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.00s" begin="-4.96s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="888.0" y="328.0" width="7" height="8" rx="3.5" fill="url(#wave)" opacity="0.92">
+      <animate attributeName="height" values="8;35.3;8" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.10s" begin="-5.12s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="328.0;314.4;328.0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.10s" begin="-5.12s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+</svg>

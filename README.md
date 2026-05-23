@@ -18,10 +18,6 @@
   <img alt="license" src="https://img.shields.io/badge/license-TBD-8b93a7?style=flat-square&labelColor=0b1020">
 </p>
 
-<img src="docs/assets/demo.gif" alt="BreathCoach demo — the breath ring, live phrase length, breath count, and coaching feedback update as the singing plays" width="100%">
-
-<sub>Live coaching on a held-out VocalSet clip: phrase length fills the ring, the breath count rises, and the waveform marks each detected breath.</sub>
-
 </div>
 
 Real-time singing breath & phrase coaching in the browser. A small (~15K-parameter) causal neural network detects audible breath events frame by frame, sits on top of a frozen pitch-tracking backbone ([NanoPitch](#backbone)), and turns its output into musically useful feedback: phrase length, breath count, and live coaching messages.

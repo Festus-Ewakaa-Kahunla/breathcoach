@@ -97,11 +97,13 @@ cd ios && xcodegen generate      # then open BreathCoach.xcodeproj in Xcode and 
 - **Model weights** — backbone, trained head, and CoreML package are included
   (`model/weights/`, `model/coreml/`) for research and demo use.
 - **VocalSet-Breath labels** — CC BY 4.0 (VocalSet is CC BY 4.0). Hosted on Hugging Face.
-- **Demo clips** — held-out GTSinger renditions, included under CC BY-NC-SA
-  (attribute GTSinger). The full GTSinger training corpus is not redistributed.
+- **Training data** — the model trains on [GTSinger](https://github.com/AaronZ345/GTSinger)
+  (Zhang et al., NeurIPS 2024; CC BY-NC-SA). The demo clips are held-out GTSinger
+  renditions under the same license; the full corpus is not redistributed here.
 
 ## Credits
 
 Festus Ewakaa Kahunla — Drexel, Musical AI, 2026.
 Built on NanoPitch by Smule (https://github.com/smulelabs/NanoPitch).
+Training data: [GTSinger](https://github.com/AaronZ345/GTSinger) (Zhang et al., NeurIPS 2024).
 Baselines: Ruinskiy & Lavner (2007); Respiro.

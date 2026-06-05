@@ -6,7 +6,7 @@
 2. **One thing per screen.** Home picks a mode. Coach shows your breaths. Mimic compares. Feedback explains. Each screen has one job.
 3. **Liquid Glass is the visual language.** Translucent layered surfaces over a single sage→ocean gradient backdrop. Nothing else competes for attention.
 4. **Touch targets ≥ 48pt.** Phone in hand, mic on, you don't tap a 24pt button.
-5. **No sign-in.** Local-first. The professor opens the app and it works. No "create account" wall.
+5. **No sign-in.** Local-first. You open the app and it works. No "create account" wall.
 
 ## Color tokens
 

@@ -6,7 +6,7 @@ breath-event layer on top of [VocalSet](https://zenodo.org/records/1193957).
 The labels themselves are **not** in this repo. They live on Hugging Face,
 because the dataset is still growing:
 
-**→ https://huggingface.co/datasets/&lt;your-hf-username&gt;/vocalset-breath**
+**→ https://huggingface.co/datasets/Ewakaa/Vocalset-Breath**
 
 ## What's here
 

@@ -40,7 +40,7 @@ feedback for singers.
 The breath labels (**VocalSet-Breath**) are hosted on Hugging Face, not in this
 repo, because the dataset is still growing:
 
-**→ https://huggingface.co/datasets/&lt;your-hf-username&gt;/vocalset-breath**  *(update once pushed)*
+**→ https://huggingface.co/datasets/Ewakaa/Vocalset-Breath**
 
 `dataset/annotator/` is the tool that produced them.
 
@@ -93,7 +93,7 @@ cd ios && xcodegen generate      # then open BreathCoach.xcodeproj in Xcode and 
 
 ## License & weights
 
-- **Code & model** — CC BY-NC-ND 4.0 (see `LICENSE`), matching Smule's NanoPitch.
+- **Code & model** — CC BY-NC-ND 4.0 (see `LICENSE`).
 - **Model weights** — backbone, trained head, and CoreML package are included
   (`model/weights/`, `model/coreml/`) for research and demo use.
 - **VocalSet-Breath labels** — CC BY 4.0 (VocalSet is CC BY 4.0). Hosted on Hugging Face.

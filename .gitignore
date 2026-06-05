@@ -1,0 +1,35 @@
+# ── Python ──
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.env
+
+# ── OS / editor ──
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# ── Runtime scratch — the server writes per-request recordings here (private). ──
+web/recordings/
+
+# ── Dataset labels live on Hugging Face, not here ──
+**/*.breath.json
+**/labels/
+**/.spec_cache/
+
+# ── Raw corpora never belong in the repo (root-level only — NOT the nanobreath
+#    `data/` code package or the CoreML `Data/` weights blob) ──
+/data/
+/runs/
+
+# ── iOS build output ──
+ios/build/
+ios/DerivedData/
+**/xcuserdata/
+*.xcuserstate

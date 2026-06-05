@@ -1,0 +1,502 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		023BD1B86E3599E08D7850DF /* CoachingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAA94C43775E222FED30637 /* CoachingState.swift */; };
+		043E75B8B708E467A601AE70 /* BreathCoach.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 1B4BD21BD91E1E6D6A2B4046 /* BreathCoach.mlpackage */; };
+		07023693DAEBF05842A3F0DA /* demo_tenor.wav in Resources */ = {isa = PBXBuildFile; fileRef = 5E8925321DBF71A7B020F9C7 /* demo_tenor.wav */; };
+		0D0F977F3230802A88B3527F /* BreathCoachApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A01FCC5A18775817032900E /* BreathCoachApp.swift */; };
+		1D93C86B91EDD2EB1DCA1668 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63032FA98E0E94A4501A7C33 /* HomeView.swift */; };
+		314F50A99464385C6E7833F2 /* ModelCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59BCD021B9BFEF933E9927E /* ModelCard.swift */; };
+		43B526C6B5A6AE6822DB2288 /* LogMel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A849E932F19FB045D4AEBEE /* LogMel.swift */; };
+		57D30FA14865A59CAE0787FF /* preprocessing.json in Resources */ = {isa = PBXBuildFile; fileRef = BDE5774AD8F0D52223252615 /* preprocessing.json */; };
+		6098C1D6D920318BF075EE09 /* CoachView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18A439850BAFD215D385081 /* CoachView.swift */; };
+		63A3277C8CE3EA1741CD7166 /* demo_soprano.wav in Resources */ = {isa = PBXBuildFile; fileRef = FDF0F0D8765292B614857B28 /* demo_soprano.wav */; };
+		7769D9FEA699F5A95E9580DF /* TimelineCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43989B5D379E88123F239E9 /* TimelineCardView.swift */; };
+		7CECA6D322FB98082EB9CE70 /* demo_clip.png in Resources */ = {isa = PBXBuildFile; fileRef = 97F7EBA6503B2FEAA586D13D /* demo_clip.png */; };
+		7EB06168B899C6CFB0AE80E5 /* demo_clip.json in Resources */ = {isa = PBXBuildFile; fileRef = 105B071D5FBA9D4EE8D67DD9 /* demo_clip.json */; };
+		8FA578C569CAC1AAB5007D91 /* GlassCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9DC76E559DCC29C01AA0A0 /* GlassCard.swift */; };
+		97D40898F320C4AA9BF90049 /* parity_sample.wav in Resources */ = {isa = PBXBuildFile; fileRef = CE6BA59F3C7413C39EE330E3 /* parity_sample.wav */; };
+		9EC6C02685625DFA1D9DB378 /* AnalysisSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443805CEFA7ECA62488609B5 /* AnalysisSectionView.swift */; };
+		9F8BCA49B3C08E481CD60737 /* ServerSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04810C461A0220DEEB2C38B7 /* ServerSettingsView.swift */; };
+		A1DA3649F83E1A15F4A2187D /* OnDeviceBreath.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32D35E7B5B5A167B19C3FF7 /* OnDeviceBreath.swift */; };
+		A37215A6D471625212760A02 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D427C05F09E5140F30F042 /* AudioRecorder.swift */; };
+		A3E664D070C579A534502898 /* CoachEmptyStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DDF1CACBB32C86EFD172FE /* CoachEmptyStates.swift */; };
+		AA227E740DFC98915B4A1748 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD2505D472CF2E7EC0C52AAD /* Assets.xcassets */; };
+		AE9DFCCEF2696708179E9E2A /* SessionSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B002F3C315E5FA72546408A /* SessionSummaryView.swift */; };
+		B7DDC46B8BBB566A99AD3809 /* parity_reference.json in Resources */ = {isa = PBXBuildFile; fileRef = 1F607863C20C29EADC625824 /* parity_reference.json */; };
+		BEE39C6DF7E8C66C53BD448A /* SideStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61CE1727BE6D537504323CD9 /* SideStatsView.swift */; };
+		C6DD82BF67F5FBF89CB17726 /* ServerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5039C5A6E0F10FF70D4CA1DE /* ServerStore.swift */; };
+		D3866FF93EB2C0538CD31CD9 /* CoachBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E878C94F48DEF2E83F65D /* CoachBannerView.swift */; };
+		D960AC09B79D1FE81A3510A5 /* MimicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E811AEC3308B2DBAEC1BAC29 /* MimicView.swift */; };
+		DEC1ACCE151817A6348940D3 /* demo_clip.wav in Resources */ = {isa = PBXBuildFile; fileRef = A7C160C6F3CE0FCECE51097A /* demo_clip.wav */; };
+		EFBCC6923035EB7B3707156C /* BreathAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1BEB374628654E2B9A6230B /* BreathAPI.swift */; };
+		F7357C54CEFC9B0E612DEED7 /* CoachController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A301CC1E8D2B77C4AE132CB9 /* CoachController.swift */; };
+		F954E0DBF49B7E6F92651E24 /* RecordingWaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C71DEE9FD5E89601B0C267 /* RecordingWaveformView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		04810C461A0220DEEB2C38B7 /* ServerSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerSettingsView.swift; sourceTree = "<group>"; };
+		105B071D5FBA9D4EE8D67DD9 /* demo_clip.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = demo_clip.json; sourceTree = "<group>"; };
+		1B4BD21BD91E1E6D6A2B4046 /* BreathCoach.mlpackage */ = {isa = PBXFileReference; path = BreathCoach.mlpackage; sourceTree = "<group>"; };
+		1F607863C20C29EADC625824 /* parity_reference.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = parity_reference.json; sourceTree = "<group>"; };
+		2A849E932F19FB045D4AEBEE /* LogMel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogMel.swift; sourceTree = "<group>"; };
+		443805CEFA7ECA62488609B5 /* AnalysisSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisSectionView.swift; sourceTree = "<group>"; };
+		5039C5A6E0F10FF70D4CA1DE /* ServerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStore.swift; sourceTree = "<group>"; };
+		5E8925321DBF71A7B020F9C7 /* demo_tenor.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = demo_tenor.wav; sourceTree = "<group>"; };
+		606E878C94F48DEF2E83F65D /* CoachBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachBannerView.swift; sourceTree = "<group>"; };
+		61CE1727BE6D537504323CD9 /* SideStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideStatsView.swift; sourceTree = "<group>"; };
+		63032FA98E0E94A4501A7C33 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		8B9DC76E559DCC29C01AA0A0 /* GlassCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassCard.swift; sourceTree = "<group>"; };
+		8E31AF5D0333C0D2F74ED5CF /* BreathCoach.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = BreathCoach.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		97F7EBA6503B2FEAA586D13D /* demo_clip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = demo_clip.png; sourceTree = "<group>"; };
+		9A01FCC5A18775817032900E /* BreathCoachApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathCoachApp.swift; sourceTree = "<group>"; };
+		9B002F3C315E5FA72546408A /* SessionSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSummaryView.swift; sourceTree = "<group>"; };
+		9EAA94C43775E222FED30637 /* CoachingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachingState.swift; sourceTree = "<group>"; };
+		A301CC1E8D2B77C4AE132CB9 /* CoachController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachController.swift; sourceTree = "<group>"; };
+		A32D35E7B5B5A167B19C3FF7 /* OnDeviceBreath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDeviceBreath.swift; sourceTree = "<group>"; };
+		A5C71DEE9FD5E89601B0C267 /* RecordingWaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingWaveformView.swift; sourceTree = "<group>"; };
+		A7C160C6F3CE0FCECE51097A /* demo_clip.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = demo_clip.wav; sourceTree = "<group>"; };
+		BDE5774AD8F0D52223252615 /* preprocessing.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = preprocessing.json; sourceTree = "<group>"; };
+		C18A439850BAFD215D385081 /* CoachView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachView.swift; sourceTree = "<group>"; };
+		C1D427C05F09E5140F30F042 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
+		C59BCD021B9BFEF933E9927E /* ModelCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelCard.swift; sourceTree = "<group>"; };
+		CD2505D472CF2E7EC0C52AAD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CE6BA59F3C7413C39EE330E3 /* parity_sample.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = parity_sample.wav; sourceTree = "<group>"; };
+		D43989B5D379E88123F239E9 /* TimelineCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineCardView.swift; sourceTree = "<group>"; };
+		E811AEC3308B2DBAEC1BAC29 /* MimicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MimicView.swift; sourceTree = "<group>"; };
+		E9DDF1CACBB32C86EFD172FE /* CoachEmptyStates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachEmptyStates.swift; sourceTree = "<group>"; };
+		F1BEB374628654E2B9A6230B /* BreathAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathAPI.swift; sourceTree = "<group>"; };
+		FDF0F0D8765292B614857B28 /* demo_soprano.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = demo_soprano.wav; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		06143A6CF50154756234F1A7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CD2505D472CF2E7EC0C52AAD /* Assets.xcassets */,
+				F96B5F49046D27BA8BC55F63 /* Demo */,
+				8F4C0CDF0A5D02E33D52FAB4 /* Model */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		1389895F9D317ABD75B43981 /* BreathCoach */ = {
+			isa = PBXGroup;
+			children = (
+				9A01FCC5A18775817032900E /* BreathCoachApp.swift */,
+				9C15DAE70747DE2DB33144E3 /* Models */,
+				06143A6CF50154756234F1A7 /* Resources */,
+				A201DA73C9002A6E680A895F /* Services */,
+				F4C35157566B87CAACEEF6EF /* Views */,
+			);
+			path = BreathCoach;
+			sourceTree = "<group>";
+		};
+		161617488815018F47581899 /* Coach */ = {
+			isa = PBXGroup;
+			children = (
+				443805CEFA7ECA62488609B5 /* AnalysisSectionView.swift */,
+				606E878C94F48DEF2E83F65D /* CoachBannerView.swift */,
+				E9DDF1CACBB32C86EFD172FE /* CoachEmptyStates.swift */,
+				A5C71DEE9FD5E89601B0C267 /* RecordingWaveformView.swift */,
+				9B002F3C315E5FA72546408A /* SessionSummaryView.swift */,
+				61CE1727BE6D537504323CD9 /* SideStatsView.swift */,
+				D43989B5D379E88123F239E9 /* TimelineCardView.swift */,
+			);
+			path = Coach;
+			sourceTree = "<group>";
+		};
+		415130525B7F7F4CBB42978F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8E31AF5D0333C0D2F74ED5CF /* BreathCoach.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6A790A937647ADE2D75C7D43 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				8B9DC76E559DCC29C01AA0A0 /* GlassCard.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		8F4C0CDF0A5D02E33D52FAB4 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1B4BD21BD91E1E6D6A2B4046 /* BreathCoach.mlpackage */,
+				1F607863C20C29EADC625824 /* parity_reference.json */,
+				CE6BA59F3C7413C39EE330E3 /* parity_sample.wav */,
+				BDE5774AD8F0D52223252615 /* preprocessing.json */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		9C15DAE70747DE2DB33144E3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A301CC1E8D2B77C4AE132CB9 /* CoachController.swift */,
+				9EAA94C43775E222FED30637 /* CoachingState.swift */,
+				C59BCD021B9BFEF933E9927E /* ModelCard.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A201DA73C9002A6E680A895F /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				C1D427C05F09E5140F30F042 /* AudioRecorder.swift */,
+				F1BEB374628654E2B9A6230B /* BreathAPI.swift */,
+				2A849E932F19FB045D4AEBEE /* LogMel.swift */,
+				A32D35E7B5B5A167B19C3FF7 /* OnDeviceBreath.swift */,
+				5039C5A6E0F10FF70D4CA1DE /* ServerStore.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		E98901B908CF6E40340E6EA6 = {
+			isa = PBXGroup;
+			children = (
+				1389895F9D317ABD75B43981 /* BreathCoach */,
+				415130525B7F7F4CBB42978F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F4C35157566B87CAACEEF6EF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C18A439850BAFD215D385081 /* CoachView.swift */,
+				63032FA98E0E94A4501A7C33 /* HomeView.swift */,
+				E811AEC3308B2DBAEC1BAC29 /* MimicView.swift */,
+				04810C461A0220DEEB2C38B7 /* ServerSettingsView.swift */,
+				161617488815018F47581899 /* Coach */,
+				6A790A937647ADE2D75C7D43 /* Components */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F96B5F49046D27BA8BC55F63 /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				105B071D5FBA9D4EE8D67DD9 /* demo_clip.json */,
+				97F7EBA6503B2FEAA586D13D /* demo_clip.png */,
+				A7C160C6F3CE0FCECE51097A /* demo_clip.wav */,
+				FDF0F0D8765292B614857B28 /* demo_soprano.wav */,
+				5E8925321DBF71A7B020F9C7 /* demo_tenor.wav */,
+			);
+			path = Demo;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CACF8F53B823A20352BAD921 /* BreathCoach */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1E4C20F854F3ED308D59621E /* Build configuration list for PBXNativeTarget "BreathCoach" */;
+			buildPhases = (
+				4411C39FF4B1DD3C9F39766A /* Sources */,
+				E4CC09F8DC217F90EC4B1FFE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BreathCoach;
+			packageProductDependencies = (
+			);
+			productName = BreathCoach;
+			productReference = 8E31AF5D0333C0D2F74ED5CF /* BreathCoach.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4C1BB24C80C1207410159475 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					CACF8F53B823A20352BAD921 = {
+						DevelopmentTeam = QL84B6QXY6;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = B6E1E81FDFEA6F1F4772B0DF /* Build configuration list for PBXProject "BreathCoach" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = E98901B908CF6E40340E6EA6;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CACF8F53B823A20352BAD921 /* BreathCoach */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E4CC09F8DC217F90EC4B1FFE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA227E740DFC98915B4A1748 /* Assets.xcassets in Resources */,
+				7EB06168B899C6CFB0AE80E5 /* demo_clip.json in Resources */,
+				7CECA6D322FB98082EB9CE70 /* demo_clip.png in Resources */,
+				DEC1ACCE151817A6348940D3 /* demo_clip.wav in Resources */,
+				63A3277C8CE3EA1741CD7166 /* demo_soprano.wav in Resources */,
+				07023693DAEBF05842A3F0DA /* demo_tenor.wav in Resources */,
+				B7DDC46B8BBB566A99AD3809 /* parity_reference.json in Resources */,
+				97D40898F320C4AA9BF90049 /* parity_sample.wav in Resources */,
+				57D30FA14865A59CAE0787FF /* preprocessing.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4411C39FF4B1DD3C9F39766A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EC6C02685625DFA1D9DB378 /* AnalysisSectionView.swift in Sources */,
+				A37215A6D471625212760A02 /* AudioRecorder.swift in Sources */,
+				EFBCC6923035EB7B3707156C /* BreathAPI.swift in Sources */,
+				043E75B8B708E467A601AE70 /* BreathCoach.mlpackage in Sources */,
+				0D0F977F3230802A88B3527F /* BreathCoachApp.swift in Sources */,
+				D3866FF93EB2C0538CD31CD9 /* CoachBannerView.swift in Sources */,
+				F7357C54CEFC9B0E612DEED7 /* CoachController.swift in Sources */,
+				A3E664D070C579A534502898 /* CoachEmptyStates.swift in Sources */,
+				6098C1D6D920318BF075EE09 /* CoachView.swift in Sources */,
+				023BD1B86E3599E08D7850DF /* CoachingState.swift in Sources */,
+				8FA578C569CAC1AAB5007D91 /* GlassCard.swift in Sources */,
+				1D93C86B91EDD2EB1DCA1668 /* HomeView.swift in Sources */,
+				43B526C6B5A6AE6822DB2288 /* LogMel.swift in Sources */,
+				D960AC09B79D1FE81A3510A5 /* MimicView.swift in Sources */,
+				314F50A99464385C6E7833F2 /* ModelCard.swift in Sources */,
+				A1DA3649F83E1A15F4A2187D /* OnDeviceBreath.swift in Sources */,
+				F954E0DBF49B7E6F92651E24 /* RecordingWaveformView.swift in Sources */,
+				9F8BCA49B3C08E481CD60737 /* ServerSettingsView.swift in Sources */,
+				C6DD82BF67F5FBF89CB17726 /* ServerStore.swift in Sources */,
+				AE9DFCCEF2696708179E9E2A /* SessionSummaryView.swift in Sources */,
+				BEE39C6DF7E8C66C53BD448A /* SideStatsView.swift in Sources */,
+				7769D9FEA699F5A95E9580DF /* TimelineCardView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		3788BBF97119880B71BAC1EE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		5FDB8898BF8207BFDAA4D2B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QL84B6QXY6;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = BreathCoach/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.festuskahunla.breathcoach;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		614BD081D3C913155E9BA86E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		D826EE08730B6D0189AB2B22 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QL84B6QXY6;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = BreathCoach/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.festuskahunla.breathcoach;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1E4C20F854F3ED308D59621E /* Build configuration list for PBXNativeTarget "BreathCoach" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5FDB8898BF8207BFDAA4D2B4 /* Debug */,
+				D826EE08730B6D0189AB2B22 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B6E1E81FDFEA6F1F4772B0DF /* Build configuration list for PBXProject "BreathCoach" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				614BD081D3C913155E9BA86E /* Debug */,
+				3788BBF97119880B71BAC1EE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4C1BB24C80C1207410159475 /* Project object */;
+}

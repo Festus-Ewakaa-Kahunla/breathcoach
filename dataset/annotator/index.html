@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>VocalSet-Breath Labeler</title>
+<style>
+  :root {
+    --bg: #0a0a14; --panel: #161628; --line: #2a2a44;
+    --ink: #e8e8f0; --dim: #8a8aaa;
+    --teal: #2ee6c8; --cyan: #5cd4ff; --amber: #ffc24b;
+    --red: #ff5d72; --purple: #a06cff; --gray: #5a5a78;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: var(--bg); color: var(--ink);
+               font-family: -apple-system, "Inter", system-ui, sans-serif; font-size: 13px; }
+  button { font: inherit; cursor: pointer; }
+  kbd { background: var(--panel); border: 1px solid var(--line);
+        padding: 1px 5px; border-radius: 3px; color: var(--ink);
+        font-family: ui-monospace, Menlo, monospace; font-size: 10px; }
+
+  .app { display: grid; grid-template-columns: 290px 1fr; grid-template-rows: 50px 1fr; height: 100vh; }
+  header { grid-column: 1 / -1; background: var(--panel); border-bottom: 1px solid var(--line);
+           display: flex; align-items: center; padding: 0 1rem; gap: 1rem; }
+  header h1 { font-size: 14px; font-weight: 600; }
+  header .progress { color: var(--dim); font-variant-numeric: tabular-nums; }
+  #save-status { font-size: 11px; }
+  .saving { color: var(--amber); } .saved { color: var(--teal); }
+  .warn { color: var(--red); }
+
+  .sidebar { background: var(--panel); border-right: 1px solid var(--line); overflow-y: auto; }
+  .sb-filter { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--line); }
+  .sb-filter input { width: 100%; background: var(--bg); color: var(--ink);
+                     border: 1px solid var(--line); border-radius: 4px; padding: 4px 8px; font: inherit; }
+  .clip-row { padding: 0.45rem 0.75rem; cursor: pointer; border-bottom: 1px solid var(--line);
+              display: grid; grid-template-columns: 14px 1fr auto auto; gap: 0.5rem;
+              align-items: center; font-size: 12px; }
+  .clip-row:hover { background: rgba(255,255,255,0.05); }
+  .clip-row.active { background: rgba(46,230,200,0.13); }
+  .clip-row .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .clip-row .count { color: var(--dim); font-variant-numeric: tabular-nums; font-size: 11px; }
+  .clip-row .breath-pill { color: var(--teal); font-variant-numeric: tabular-nums; font-size: 10px; }
+  .clip-row .breath-pill.zero { color: var(--gray); }
+  .clip-row .cand-pill { color: #04130f; background: var(--amber); font-variant-numeric: tabular-nums; font-size: 10px; font-weight: 700; border-radius: 8px; padding: 1px 6px; }
+  .status.untouched { color: var(--gray); }
+  .status.draft     { color: var(--amber); }
+  .status.labeled   { color: var(--teal); }
+
+  main { display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+  .empty-state { padding: 4rem; color: var(--dim); text-align: center; }
+  .clip-header { padding: 0.6rem 1rem; border-bottom: 1px solid var(--line);
+                 display: flex; gap: 1rem; align-items: baseline; font-size: 13px; }
+  .clip-header .title { font-weight: 600; }
+  .clip-header .meta { color: var(--dim); font-size: 11px; }
+  .clip-header .counts { color: var(--dim); font-size: 11px; margin-left: auto; }
+
+  .timeline { flex: 1; position: relative; display: flex; flex-direction: column;
+              background: #06060c; min-height: 280px; cursor: crosshair; user-select: none; }
+  .track { position: relative; border-bottom: 1px solid var(--line); }
+  .track-spec { flex: 2.5; }
+  .track-wave { flex: 1; background: #0a0a14; }
+  .track-spec img { width: 100%; height: 100%; object-fit: fill; display: block; }
+  .track canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .track canvas.bg { z-index: 0; pointer-events: none; }
+  .track canvas.markers { z-index: 1; pointer-events: none; }
+  .playhead { position: absolute; top: 0; bottom: 0; width: 1px; background: #fff;
+              box-shadow: 0 0 6px rgba(255,255,255,0.6); z-index: 10; pointer-events: none; left: 0; }
+
+  .transport { padding: 0.5rem 1rem; border-top: 1px solid var(--line);
+               display: flex; align-items: center; gap: 0.75rem; background: var(--panel); }
+  .transport button { background: rgba(255,255,255,0.05); border: 1px solid var(--line);
+                      color: var(--ink); padding: 0.25rem 0.75rem; border-radius: 4px; }
+  .transport button:hover { background: rgba(255,255,255,0.1); }
+  .transport .time { font-variant-numeric: tabular-nums; color: var(--dim); }
+  .transport .speed { display: flex; gap: 0.25rem; align-items: center; color: var(--dim); }
+  .transport .speed button.active { background: var(--teal); color: #04130f; border-color: var(--teal); }
+
+  .marker-panel { border-top: 1px solid var(--line); background: var(--panel);
+                  max-height: 220px; overflow-y: auto; }
+  .marker-panel .empty { padding: 0.5rem 1rem; color: var(--dim); font-style: italic; font-size: 12px; }
+  .marker-row { padding: 0.4rem 1rem; border-bottom: 1px solid var(--line);
+                display: grid; grid-template-columns: 12px 110px 60px 60px 60px 1fr;
+                gap: 0.6rem; font-size: 12px; align-items: center; cursor: pointer; }
+  .marker-row:hover { background: rgba(255,255,255,0.04); }
+  .marker-row.selected { background: rgba(46,230,200,0.12); outline: 1px solid var(--teal); outline-offset: -1px; }
+  .marker-row.draft { opacity: 0.7; }
+  .marker-row .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .marker-row .cat { text-transform: uppercase; font-size: 10px; letter-spacing: 0.04em; font-weight: 600; }
+  .marker-row .time { font-variant-numeric: tabular-nums; color: var(--dim); }
+  .cat-breath        { color: var(--teal); }    .dot-breath        { background: var(--teal); }
+  .cat-silent_breath { color: var(--cyan); }    .dot-silent_breath { background: var(--cyan); }
+  .cat-uncertain     { color: var(--amber); }   .dot-uncertain     { background: var(--amber); }
+  .cat-hard_negative { color: var(--red); }     .dot-hard_negative { background: var(--red); }
+  .cat-exhale        { color: var(--purple); }  .dot-exhale        { background: var(--purple); }
+
+  .keys { border-top: 1px solid var(--line); background: #06060c;
+          padding: 0.5rem 1rem; color: var(--dim); font-size: 11px;
+          display: flex; gap: 1.25rem; flex-wrap: wrap; align-items: center; }
+  .keys span { white-space: nowrap; }
+
+  .labeler-bar { padding: 0.4rem 0.75rem; border-bottom: 1px solid var(--line);
+                 background: var(--panel); }
+  .labeler-bar input { width: 100%; background: var(--bg); color: var(--ink);
+                       border: 1px solid var(--line); border-radius: 4px;
+                       padding: 4px 8px; font: inherit; }
+  .labeler-bar label { color: var(--dim); font-size: 11px; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header>
+    <h1>🫁 VocalSet-Breath Labeler</h1>
+    <span class="progress" id="progress">— / —</span>
+    <span style="flex:1"></span>
+    <span id="save-status"></span>
+  </header>
+
+  <aside class="sidebar">
+    <div class="labeler-bar">
+      <label>Labeler</label>
+      <input id="labeler-input" placeholder="your name (saved with each label)">
+    </div>
+    <div class="sb-filter">
+      <input id="filter-input" placeholder="filter clips…">
+    </div>
+    <div id="clip-list"></div>
+  </aside>
+
+  <main id="main">
+    <div class="empty-state">
+      Pick a clip from the sidebar to start labeling.<br>
+      <span style="font-size:11px; color:var(--gray);">Read <code>dataset/docs/labeling_rubric.md</code> first if you haven't.</span>
+    </div>
+  </main>
+</div>
+
+<template id="clip-view">
+  <div class="clip-header">
+    <span class="title" id="clip-title">—</span>
+    <span class="meta" id="clip-meta">—</span>
+    <span class="counts" id="counts">—</span>
+  </div>
+  <div class="timeline" id="timeline">
+    <div class="track track-spec">
+      <img id="spec-img" alt="spectrogram">
+      <canvas class="markers" id="spec-markers"></canvas>
+    </div>
+    <div class="track track-wave">
+      <canvas class="bg" id="wave-bg"></canvas>
+      <canvas class="markers" id="wave-markers"></canvas>
+    </div>
+    <div class="playhead" id="playhead"></div>
+  </div>
+  <div class="transport">
+    <button id="play-btn">▶ Play</button>
+    <span class="time"><span id="cur-time">0.00</span> / <span id="total-time">0.00</span> s</span>
+    <span class="speed">
+      <span>speed</span>
+      <button data-speed="0.5">0.5×</button>
+      <button data-speed="0.75">0.75×</button>
+      <button data-speed="1" class="active">1×</button>
+      <button data-speed="1.5">1.5×</button>
+    </span>
+    <span style="flex:1"></span>
+    <button id="save-btn" style="background:var(--teal);color:#04130f;border-color:var(--teal);font-weight:600;">💾 Save</button>
+    <button id="prev-btn">← Prev</button>
+    <button id="next-btn">Next →</button>
+  </div>
+  <div class="marker-panel" id="marker-panel"></div>
+  <div class="keys">
+    <span><kbd>Space</kbd> play/pause</span>
+    <span><kbd>←</kbd>/<kbd>→</kbd> 1s · <kbd>⇧+←</kbd>/<kbd>→</kbd> 100ms</span>
+    <span><kbd>A</kbd> accept · <kbd>D</kbd> delete · <kbd>B</kbd> breath</span>
+    <span><kbd>H</kbd> hard-neg · <kbd>U</kbd> uncertain · <kbd>S</kbd> silent · <kbd>E</kbd> exhale</span>
+    <span><kbd>[</kbd>/<kbd>]</kbd> nudge start · <kbd>⇧[</kbd>/<kbd>⇧]</kbd> nudge end (±10ms)</span>
+    <span><kbd>1</kbd>/<kbd>2</kbd>/<kbd>3</kbd> conf</span>
+    <span><kbd>↑</kbd>/<kbd>↓</kbd> select marker</span>
+    <span><kbd>Tab</kbd>/<kbd>⇧Tab</kbd> next/prev clip</span>
+    <span><kbd>⌘Z</kbd>/<kbd>⌘⇧Z</kbd> undo/redo</span>
+  </div>
+</template>
+
+<audio id="audio" preload="auto"></audio>
+
+<script>
+// ════════════════════════════════════════════════════════════════════════
+//  State
+// ════════════════════════════════════════════════════════════════════════
+const state = {
+  clips: [], filteredClips: [], currentId: null,
+  labels: null, markers: [], selectedIdx: -1,
+  decodedAudio: null,            // Float32Array of the current clip's mono samples
+  playbackRate: 1.0,
+  reviewStartMs: 0,
+  saveTimer: null,
+  history: [], historyIdx: -1,
+  dirty: false,                  // true only after a real user edit (not click-through)
+};
+const CATS = ["breath","silent_breath","uncertain","hard_negative","exhale"];
+const CAT_KEY = { breath:"breath_events", silent_breath:"silent_breaths",
+                  uncertain:"uncertain", hard_negative:"hard_negatives", exhale:"exhales" };
+const CAT_COLOR = {
+  breath:"#2ee6c8", silent_breath:"#5cd4ff", uncertain:"#ffc24b",
+  hard_negative:"#ff5d72", exhale:"#a06cff",
+};
+const audio = document.getElementById("audio");
+
+// ════════════════════════════════════════════════════════════════════════
+//  Boot
+// ════════════════════════════════════════════════════════════════════════
+async function boot() {
+  document.getElementById("labeler-input").value = localStorage.getItem("labeler") || "";
+  document.getElementById("labeler-input").oninput = (e) =>
+    localStorage.setItem("labeler", e.target.value);
+  document.getElementById("filter-input").oninput = (e) => applyFilter(e.target.value);
+  await reloadClips();
+}
+async function reloadClips() {
+  state.clips = await fetch("/api/clips").then(r => r.json());
+  applyFilter(document.getElementById("filter-input").value || "");
+  renderProgress();
+}
+function applyFilter(q) {
+  q = q.toLowerCase().trim();
+  state.filteredClips = !q ? state.clips
+    : state.clips.filter(c => c.id.toLowerCase().includes(q));
+  renderSidebar();
+}
+function renderProgress() {
+  const lab = state.clips.filter(c => c.status === "labeled").length;
+  const dur_total = state.clips.reduce((s,c) => s + (c.duration_sec||0), 0);
+  const cand = state.clips.reduce((s,c) => s + (c.n_candidates_remaining||0), 0);
+  const candNote = cand ? ` · ${cand} candidates to review` : " · all candidates reviewed ✓";
+  document.getElementById("progress").textContent =
+    `${lab} / ${state.clips.length} labeled · ${(dur_total/60).toFixed(1)} min total${candNote}`;
+}
+function renderSidebar() {
+  const list = document.getElementById("clip-list");
+  list.innerHTML = "";
+  for (const c of state.filteredClips) {
+    const row = document.createElement("div");
+    row.className = "clip-row" + (c.id === state.currentId ? " active" : "");
+    const g = { labeled:"✓", draft:"·", untouched:"○" }[c.status] || "?";
+    const cand = c.n_candidates_remaining || 0;
+    const candPill = cand ? `<span class="cand-pill" title="${cand} hard-negative candidates awaiting review">${cand}⚑</span>` : "";
+    row.innerHTML = `
+      <span class="status ${c.status}">${g}</span>
+      <span class="name" title="${c.id}">${c.id}</span>
+      ${candPill}
+      <span class="breath-pill ${c.n_breath?'':'zero'}">${c.n_breath||0}♪</span>
+      <span class="count">${c.duration_sec.toFixed(1)}s</span>`;
+    row.onclick = () => loadClip(c.id);
+    list.appendChild(row);
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  Load a clip
+// ════════════════════════════════════════════════════════════════════════
+async function loadClip(id) {
+  if (state.currentId === id) return;
+  if (state.currentId) await finalizeSave();
+
+  state.currentId = id;
+  state.reviewStartMs = performance.now();
+  state.history = []; state.historyIdx = -1;
+  state.decodedAudio = null;
+  state.dirty = false;
+
+  const main = document.getElementById("main");
+  main.innerHTML = "";
+  main.appendChild(document.getElementById("clip-view").content.cloneNode(true));
+  bindTransport();
+
+  const labels = await fetch(`/api/labels/${id}`).then(r => r.json());
+  state.labels = labels;
+  state.markers = flattenLabels(labels);
+  state.selectedIdx = state.markers.length ? 0 : -1;
+  pushHistory();
+
+  document.getElementById("clip-title").textContent = id;
+  document.getElementById("clip-meta").textContent =
+    `${labels.duration_sec}s · pre-fill ${labels.pre_fill_source || '—'}`;
+  document.getElementById("total-time").textContent = labels.duration_sec.toFixed(2);
+  document.getElementById("spec-img").src = `/api/clips/${id}.png`;
+
+  audio.src = `/api/clips/${id}.wav`;
+  audio.playbackRate = state.playbackRate;
+  audio.currentTime = 0;
+  document.getElementById("play-btn").textContent = "▶ Play";
+  audio.onended = () => { document.getElementById("play-btn").textContent = "▶ Play"; };
+  audio.ontimeupdate = onPlayheadTick;
+  audio.oncanplay = () => decodeAndDrawWave(id);
+
+  renderMarkers(); renderMarkerPanel();
+  renderSidebar();
+}
+function flattenLabels(L) {
+  const out = []; let nid = 1;
+  for (const cat of CATS) {
+    for (const ev of (L[CAT_KEY[cat]] || [])) {
+      out.push({
+        id: nid++, category: cat,
+        start_sec: +ev.start_sec, end_sec: +ev.end_sec,
+        confidence: ev.confidence || "medium",
+        source: ev.source || "human_added",
+        notes: ev.notes || "",
+      });
+    }
+  }
+  out.sort((a,b) => a.start_sec - b.start_sec);
+  return out;
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  Rendering
+// ════════════════════════════════════════════════════════════════════════
+const dur = () => state.labels?.duration_sec || 1;
+function setupCanvas(c) {
+  const dpr = window.devicePixelRatio || 1;
+  c.width = c.clientWidth * dpr;
+  c.height = c.clientHeight * dpr;
+  const ctx = c.getContext("2d");
+  ctx.setTransform(1,0,0,1,0,0); ctx.scale(dpr, dpr);
+  return ctx;
+}
+async function decodeAndDrawWave(id) {
+  try {
+    const buf = await fetch(`/api/clips/${id}.wav`).then(r => r.arrayBuffer());
+    const ac = new (window.AudioContext || window.webkitAudioContext)();
+    const ab = await ac.decodeAudioData(buf);
+    state.decodedAudio = ab.getChannelData(0).slice(0);
+    drawWaveform();
+  } catch (e) { console.warn("decode failed", e); }
+}
+function drawWaveform() {
+  const c = document.getElementById("wave-bg");
+  if (!c || !state.decodedAudio) return;
+  const ctx = setupCanvas(c);
+  const W = c.clientWidth, H = c.clientHeight, mid = H/2;
+  const data = state.decodedAudio;
+  const step = data.length / W;
+  ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle = "rgba(108,123,255,0.75)"; ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (let x=0; x<W; x++) {
+    let mx = 0;
+    const s = Math.floor(x*step), e = Math.floor((x+1)*step);
+    for (let i=s; i<e; i++) { const v = Math.abs(data[i]); if (v>mx) mx=v; }
+    const h = Math.max(0.5, mx*(H/2 - 4));
+    ctx.moveTo(x, mid-h); ctx.lineTo(x, mid+h);
+  }
+  ctx.stroke();
+}
+function renderMarkers() {
+  for (const cid of ["spec-markers","wave-markers"]) {
+    const c = document.getElementById(cid); if (!c) continue;
+    const ctx = setupCanvas(c);
+    const W = c.clientWidth, H = c.clientHeight, D = dur();
+    ctx.clearRect(0,0,W,H);
+    state.markers.forEach((m, idx) => {
+      const x1 = (m.start_sec / D) * W;
+      const x2 = (m.end_sec   / D) * W;
+      const w  = Math.max(2, x2 - x1);
+      const col = CAT_COLOR[m.category] || "#888";
+      const draft = isDraft(m);
+      ctx.fillStyle = col + (draft ? "22" : "3a");
+      ctx.fillRect(x1, 0, w, H);
+      ctx.strokeStyle = col;
+      ctx.lineWidth = idx === state.selectedIdx ? 2.5 : (draft ? 1 : 1.5);
+      ctx.setLineDash(draft ? [3,3] : []);
+      ctx.strokeRect(x1+0.5, 0.5, w-1, H-1);
+      ctx.setLineDash([]);
+      // onset dot
+      ctx.fillStyle = col;
+      ctx.beginPath(); ctx.arc(x1, cid === "spec-markers" ? 6 : H-6, 3, 0, Math.PI*2); ctx.fill();
+    });
+  }
+}
+function hitTestEdge(t, D, totalW) {
+  // Returns {idx, mode:"start"|"end"} if t is within ~6 px of any marker's edge.
+  const EDGE_PX = 6;
+  const edgeT = (EDGE_PX / totalW) * D;
+  for (let i = 0; i < state.markers.length; i++) {
+    const m = state.markers[i];
+    if (Math.abs(t - m.start_sec) <= edgeT) return { idx: i, mode: "start" };
+    if (Math.abs(t - m.end_sec)   <= edgeT) return { idx: i, mode: "end"   };
+  }
+  return null;
+}
+
+function renderMarkerPanel() {
+  const panel = document.getElementById("marker-panel");
+  if (!panel) return;
+  panel.innerHTML = "";
+  const counts = CATS.map(c => `${state.markers.filter(m=>m.category===c).length} ${c}`).join(" · ");
+  const head = document.getElementById("counts");
+  if (head) head.textContent = counts;
+  if (state.markers.length === 0) {
+    panel.innerHTML = '<div class="empty">No markers yet. Press <kbd>B</kbd> at the playhead to add a breath, or play the audio to find spots.</div>';
+    return;
+  }
+  state.markers.forEach((m, idx) => {
+    const row = document.createElement("div");
+    row.className = "marker-row" + (idx === state.selectedIdx ? " selected" : "")
+                  + (isDraft(m) ? " draft" : "");
+    const draftTag = isDraft(m) ? "(draft)" : "";
+    row.innerHTML = `
+      <span class="dot dot-${m.category}"></span>
+      <span class="cat cat-${m.category}">${m.category}</span>
+      <span class="time">${m.start_sec.toFixed(2)}s</span>
+      <span class="time">+${(m.end_sec - m.start_sec).toFixed(2)}s</span>
+      <span style="color:var(--dim); font-size:11px;">${m.confidence}</span>
+      <span style="color:var(--dim); font-size:11px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${draftTag} ${m.notes||""}</span>`;
+    row.onclick = () => { state.selectedIdx = idx; seekTo(m.start_sec); renderMarkers(); renderMarkerPanel(); };
+    panel.appendChild(row);
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  Playback
+// ════════════════════════════════════════════════════════════════════════
+function onPlayheadTick() {
+  const ph = document.getElementById("playhead");
+  const tl = document.getElementById("timeline");
+  if (!ph || !tl) return;
+  const t = audio.currentTime;
+  ph.style.left = ((t / dur()) * tl.clientWidth) + "px";
+  document.getElementById("cur-time").textContent = t.toFixed(2);
+}
+function bindTransport() {
+  document.getElementById("play-btn").onclick = togglePlay;
+  document.getElementById("save-btn").onclick = () => saveNow();
+  document.getElementById("prev-btn").onclick = prevClip;
+  document.getElementById("next-btn").onclick = nextClip;
+  document.querySelectorAll("[data-speed]").forEach(btn => {
+    btn.onclick = () => {
+      const s = parseFloat(btn.dataset.speed);
+      state.playbackRate = s; audio.playbackRate = s;
+      document.querySelectorAll("[data-speed]").forEach(b =>
+        b.classList.toggle("active", parseFloat(b.dataset.speed) === s));
+    };
+  });
+  // ── Timeline: drag edges to resize markers; click empty space to seek ──
+  const tl = document.getElementById("timeline");
+  let drag = null;            // { idx, mode:"start"|"end" } while dragging
+  const xy = (e) => {
+    const r = tl.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const D = dur();
+    return { x, t: (x / r.width) * D, D, W: r.width };
+  };
+  tl.addEventListener("mousedown", (e) => {
+    const { t, D, W } = xy(e);
+    const hit = hitTestEdge(t, D, W);
+    if (hit) {
+      drag = hit;
+      state.selectedIdx = hit.idx;
+      renderMarkers(); renderMarkerPanel();
+      e.preventDefault();
+    } else {
+      seekTo(t);                                       // empty space → seek
+    }
+  });
+  tl.addEventListener("mousemove", (e) => {
+    const { t, D, W } = xy(e);
+    if (drag) {
+      const m = state.markers[drag.idx];
+      if (drag.mode === "start") m.start_sec = Math.max(0, Math.min(m.end_sec - 0.02, t));
+      else                       m.end_sec   = Math.max(m.start_sec + 0.02, Math.min(D, t));
+      if (isDraft(m)) m.source = "human_nudged";
+      renderMarkers();                                  // live update; panel updates on release
+    } else {
+      tl.style.cursor = hitTestEdge(t, D, W) ? "ew-resize" : "crosshair";
+    }
+  });
+  const endDrag = () => {
+    if (drag) {
+      pushHistory(); renderMarkerPanel(); scheduleSave();
+      drag = null;
+    }
+  };
+  tl.addEventListener("mouseup", endDrag);
+  tl.addEventListener("mouseleave", endDrag);
+}
+function togglePlay() {
+  const btn = document.getElementById("play-btn");
+  if (audio.paused) { audio.play(); btn.textContent = "⏸ Pause"; }
+  else { audio.pause(); btn.textContent = "▶ Play"; }
+}
+function seekTo(t) {
+  audio.currentTime = Math.max(0, Math.min(dur() - 0.01, t));
+  onPlayheadTick();
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  Marker editing
+// ════════════════════════════════════════════════════════════════════════
+function pushHistory() {
+  state.history = state.history.slice(0, state.historyIdx + 1);
+  state.history.push({
+    markers: JSON.parse(JSON.stringify(state.markers)),
+    selectedIdx: state.selectedIdx,
+  });
+  state.historyIdx = state.history.length - 1;
+  if (state.history.length > 200) state.history = state.history.slice(-200);
+}
+function applyHistory() {
+  const s = state.history[state.historyIdx];
+  state.markers = JSON.parse(JSON.stringify(s.markers));
+  state.selectedIdx = s.selectedIdx;
+  renderMarkers(); renderMarkerPanel(); scheduleSave();
+}
+function undo() { if (state.historyIdx > 0) { state.historyIdx--; applyHistory(); } }
+function redo() { if (state.historyIdx < state.history.length - 1) { state.historyIdx++; applyHistory(); } }
+
+function markerAtPlayhead() {
+  const t = audio.currentTime;
+  return state.markers.findIndex(m => t >= m.start_sec - 0.05 && t <= m.end_sec + 0.05);
+}
+// A marker is "draft" if it came from a model and hasn't been touched by a human.
+// Includes v11's prefill markers and v13's hard-negative candidates from the seeder.
+function isDraft(m) {
+  return m && (m.source === "v11_prefill" || m.source === "v13_low_thresh_candidate");
+}
+
+function accept() {
+  let i = state.selectedIdx >= 0 ? state.selectedIdx : markerAtPlayhead();
+  if (i < 0) return;
+  if (isDraft(state.markers[i])) {
+    state.markers[i].source = "human_accepted";
+    state.selectedIdx = i; pushHistory();
+    renderMarkers(); renderMarkerPanel(); scheduleSave();
+  }
+}
+function deleteCurrent() {
+  let i = state.selectedIdx >= 0 ? state.selectedIdx : markerAtPlayhead();
+  if (i < 0) return;
+  state.markers.splice(i, 1);
+  state.selectedIdx = Math.min(i, state.markers.length - 1);
+  pushHistory(); renderMarkers(); renderMarkerPanel(); scheduleSave();
+}
+function addMarker(category, defaultDur = 0.3) {
+  const t = audio.currentTime;
+  const m = { id: Date.now()+Math.random(), category,
+              start_sec: Math.max(0, t - 0.05),
+              end_sec: Math.min(dur(), t + defaultDur - 0.05),
+              confidence: "high", source: "human_added", notes: "" };
+  state.markers.push(m);
+  state.markers.sort((a,b) => a.start_sec - b.start_sec);
+  state.selectedIdx = state.markers.findIndex(x => x.id === m.id);
+  pushHistory(); renderMarkers(); renderMarkerPanel(); scheduleSave();
+}
+function changeCategory(category) {
+  if (state.selectedIdx < 0) return;
+  state.markers[state.selectedIdx].category = category;
+  if (isDraft(state.markers[state.selectedIdx]))
+    state.markers[state.selectedIdx].source = "human_recategorized";
+  pushHistory(); renderMarkers(); renderMarkerPanel(); scheduleSave();
+}
+function setConfidence(c) {
+  if (state.selectedIdx < 0) return;
+  state.markers[state.selectedIdx].confidence = c;
+  pushHistory(); renderMarkerPanel(); scheduleSave();
+}
+function nudge(side, deltaSec) {
+  if (state.selectedIdx < 0) return;
+  const m = state.markers[state.selectedIdx];
+  if (side === "start") m.start_sec = Math.max(0, Math.min(m.end_sec - 0.02, m.start_sec + deltaSec));
+  else                  m.end_sec   = Math.max(m.start_sec + 0.02, Math.min(dur(), m.end_sec + deltaSec));
+  if (isDraft(m)) m.source = "human_nudged";
+  pushHistory(); renderMarkers(); renderMarkerPanel(); scheduleSave();
+}
+function moveSelection(dir) {
+  if (state.markers.length === 0) return;
+  if (state.selectedIdx < 0) { state.selectedIdx = dir > 0 ? 0 : state.markers.length - 1; }
+  else state.selectedIdx = Math.max(0, Math.min(state.markers.length - 1, state.selectedIdx + dir));
+  seekTo(state.markers[state.selectedIdx].start_sec);
+  renderMarkers(); renderMarkerPanel();
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  Save
+// ════════════════════════════════════════════════════════════════════════
+function unflattenMarkers() {
+  const out = { breath_events: [], silent_breaths: [], uncertain: [],
+                hard_negatives: [], exhales: [] };
+  for (const m of state.markers) {
+    out[CAT_KEY[m.category]].push({
+      start_sec: Math.round(m.start_sec * 1000) / 1000,
+      end_sec:   Math.round(m.end_sec   * 1000) / 1000,
+      confidence: m.confidence, source: m.source, notes: m.notes,
+    });
+  }
+  return out;
+}
+function scheduleSave() {
+  // Mark the clip dirty but DON'T write to disk — explicit save only.
+  state.dirty = true;
+  const ss = document.getElementById("save-status");
+  if (ss) { ss.textContent = "● unsaved — press ⌘S or click Save"; ss.className = "saving"; }
+}
+async function saveNow() {
+  if (!state.labels) return;
+  if (!state.dirty) return;                    // nothing to save
+  const ss = document.getElementById("save-status");
+  if (ss) { ss.textContent = "saving…"; ss.className = "saving"; }
+  const labeler = document.getElementById("labeler-input").value.trim() || (state.labels.labeler || "");
+  const payload = {
+    ...state.labels,
+    ...unflattenMarkers(),
+    labeler,
+    label_date: new Date().toISOString().slice(0, 10),
+    review_time_sec: Math.round((performance.now() - state.reviewStartMs) / 1000)
+                   + (state.labels.review_time_sec || 0),
+  };
+  try {
+    const res = await fetch(`/api/labels/${state.currentId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    document.getElementById("save-status").textContent = "✓ saved";
+    document.getElementById("save-status").className = "saved";
+    state.labels = payload;
+    state.dirty = false;
+    // Saving = labeling. File now exists, clip becomes ✓ labeled regardless
+    // of how many markers it has (zero is a valid "I reviewed and found no
+    // breaths" decision).
+    const idx = state.clips.findIndex(c => c.id === state.currentId);
+    if (idx >= 0) {
+      state.clips[idx].status = "labeled";
+      state.clips[idx].n_breath = state.markers.filter(m => m.category === "breath").length;
+      state.clips[idx].n_total  = state.markers.length;
+      state.clips[idx].n_candidates_remaining =
+        state.markers.filter(m => m.source === "v13_low_thresh_candidate").length;
+      applyFilter(document.getElementById("filter-input").value || "");
+      renderProgress();
+    }
+  } catch (e) {
+    document.getElementById("save-status").textContent = "⚠ save failed: " + e.message;
+    document.getElementById("save-status").className = "warn";
+  }
+}
+async function finalizeSave() {
+  // Called when leaving a clip. If the user has unsaved edits, ask first —
+  // never silently write the dataset on click-through.
+  if (!state.dirty) return;
+  const yes = confirm(`Save changes to "${state.currentId}" before leaving?\n\n[OK] save · [Cancel] discard edits`);
+  if (yes) {
+    await saveNow();
+  } else {
+    state.dirty = false;                       // discard
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  Navigation
+// ════════════════════════════════════════════════════════════════════════
+function prevClip() {
+  const list = state.filteredClips;
+  const i = list.findIndex(c => c.id === state.currentId);
+  if (i > 0) loadClip(list[i-1].id);
+}
+function nextClip() {
+  const list = state.filteredClips;
+  const i = list.findIndex(c => c.id === state.currentId);
+  if (i >= 0 && i < list.length - 1) loadClip(list[i+1].id);
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  Keyboard
+// ════════════════════════════════════════════════════════════════════════
+window.addEventListener("keydown", (e) => {
+  if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+  if (!state.currentId) return;
+  const k = e.key, K = k.toLowerCase(), SHIFT = e.shiftKey, MOD = e.metaKey || e.ctrlKey;
+
+  if (k === " ") { e.preventDefault(); togglePlay(); return; }
+  if (k === "ArrowLeft")  { e.preventDefault(); seekTo(audio.currentTime - (SHIFT ? 0.1 : 1)); return; }
+  if (k === "ArrowRight") { e.preventDefault(); seekTo(audio.currentTime + (SHIFT ? 0.1 : 1)); return; }
+  if (k === "ArrowUp")    { e.preventDefault(); moveSelection(-1); return; }
+  if (k === "ArrowDown")  { e.preventDefault(); moveSelection( 1); return; }
+  if (k === "Tab")        { e.preventDefault(); SHIFT ? prevClip() : nextClip(); return; }
+  if (K === "z")          { e.preventDefault(); SHIFT ? redo() : undo(); return; }
+  if (MOD && K === "s")   { e.preventDefault(); finalizeSave(); return; }
+  if (K === "a") { e.preventDefault(); accept(); return; }
+  if (K === "d") { e.preventDefault(); deleteCurrent(); return; }
+  if (K === "b") { e.preventDefault();
+    state.selectedIdx >= 0 ? changeCategory("breath") : addMarker("breath"); return; }
+  if (K === "h") { e.preventDefault();
+    state.selectedIdx >= 0 ? changeCategory("hard_negative") : addMarker("hard_negative", 0.15); return; }
+  if (K === "u") { e.preventDefault();
+    state.selectedIdx >= 0 ? changeCategory("uncertain") : addMarker("uncertain"); return; }
+  if (K === "s") { e.preventDefault();
+    state.selectedIdx >= 0 ? changeCategory("silent_breath") : addMarker("silent_breath"); return; }
+  if (K === "e") { e.preventDefault();
+    state.selectedIdx >= 0 ? changeCategory("exhale") : addMarker("exhale"); return; }
+  if (k === "1") { setConfidence("high"); return; }
+  if (k === "2") { setConfidence("medium"); return; }
+  if (k === "3") { setConfidence("low"); return; }
+  if (k === "[") { e.preventDefault(); nudge(SHIFT ? "end" : "start", -0.01); return; }
+  if (k === "]") { e.preventDefault(); nudge(SHIFT ? "end" : "start",  0.01); return; }
+});
+
+// resize → redraw
+window.addEventListener("resize", () => {
+  if (state.currentId) { renderMarkers(); drawWaveform(); onPlayheadTick(); }
+});
+
+boot();
+</script>
+</body>
+</html>

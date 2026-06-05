@@ -1,0 +1,42 @@
+# Xcode
+build/
+DerivedData/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+xcuserdata/
+*.xccheckout
+*.moved-aside
+*.xcuserstate
+*.xcscmblueprint
+
+# Swift Package Manager
+.swiftpm/
+Packages/
+Package.resolved
+.build/
+
+# CocoaPods (if used)
+Pods/
+
+# macOS
+.DS_Store
+
+# Audio recordings (do not commit user audio)
+*.m4a
+*.caf
+*.wav
+*.mp3
+*.aac
+# ...but DO ship the app's bundled demo clips + CoreML parity fixture
+!BreathCoach/Resources/Demo/*.wav
+!BreathCoach/Resources/Model/*.wav
+
+# Local secrets / IPs
+.env
+Config.local.swift
+
+# IDE
+.vscode/
+.idea/

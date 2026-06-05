@@ -1,0 +1,65 @@
+name: BreathCoach
+options:
+  bundleIdPrefix: com.festuskahunla
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+  xcodeVersion: "26.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    IPHONEOS_DEPLOYMENT_TARGET: "26.0"
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    SWIFT_STRICT_CONCURRENCY: complete
+
+targets:
+  BreathCoach:
+    type: application
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: BreathCoach
+        excludes:
+          - "**/.DS_Store"
+          - "Resources/Info.plist"   # managed via the info: block below
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.festuskahunla.breathcoach
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        TARGETED_DEVICE_FAMILY: "1"          # iPhone only
+        SUPPORTS_MACCATALYST: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        GENERATE_INFOPLIST_FILE: NO          # we provide Info.plist explicitly
+        # Code signing — automatic, against the team you're signed into in Xcode
+        # (QL84B6QXY6, per Xcode's last-selected team). If Run still says
+        # "No Account", pick your team in Signing & Capabilities and update this.
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: "QL84B6QXY6"
+      configs:
+        Debug:
+          SWIFT_OPTIMIZATION_LEVEL: "-Onone"
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG"
+        Release:
+          SWIFT_OPTIMIZATION_LEVEL: "-O"
+    info:
+      path: BreathCoach/Resources/Info.plist
+      properties:
+        CFBundleDisplayName: BreathCoach
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        LSRequiresIPhoneOS: true
+        UILaunchScreen:
+          UIColorName: ""
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIRequiredDeviceCapabilities:
+          - arm64
+          - microphone
+        NSMicrophoneUsageDescription: "BreathCoach listens through the microphone to detect where you breathe while singing."
+        NSLocalNetworkUsageDescription: "BreathCoach connects to the model server running on your Mac over local Wi-Fi."
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true

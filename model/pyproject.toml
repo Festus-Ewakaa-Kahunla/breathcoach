@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nanobreath"
+version = "0.1.0"
+description = "BreathCoach — frozen NanoPitch backbone + trained BreathHead for singing breath detection"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Festus Ewakaa Kahunla" }]
+dependencies = [
+    "numpy",
+    "torch",
+    "soundfile",
+    "scipy",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
